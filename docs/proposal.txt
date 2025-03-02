@@ -1,16 +1,16 @@
 1. Project Title and Team Members
-Title - Justin Alega, Brant Bremer, Benjamin Biehl, Aaron Dubale, Cooper Wooley
+ParkVision - Justin Alega, Brant Bremer, Benjamin Biehl, Aaron Dubale, Cooper Wooley
 
 2. Problem Statement
-Parking inneficiency leads to congestion, wasted time, and frustration for drivers looking for available spots, especially in high-traffic areas. Current solutions rely on sensors or manual monitoring, which can be costly and difficult to maintain. A more scalable, automated system is needed to track real-time parking availability.
+Parking ineficiency leads to congestion, wasted time, and frustration for drivers looking for available spots, especially in high-traffic areas. Current solutions rely on sensors or manual monitoring, which can be costly and difficult to maintain. A more scalable, automated system is needed to track real-time parking availability.
 
 3. Proposed Solution
-[Title] will provide real-time, smart parking management that will help drivers locate available parking spots and will allow for administrators to monitor lot occupancy. By using computer vision, it will process live camera feeds to detect parked vehicles and map their positions onto a corresponding top-down view. The system will integrate with a dashboard to display real-time availability, making parking more efficient.
-Targets: Drivers, Parking Lot Administrators, Universities and Businesses
+ParkVision will provide real-time, smart parking management that will help drivers locate available parking spots and will allow for administrators to monitor lot occupancy. By using computer vision, it will process live camera feeds to detect parked vehicles and map their positions onto a corresponding top-down view. The system will integrate with a dashboard to display real-time availability, making parking more efficient.
+Targets: Drivers, Parking Lot Administrators, Universities, and Businesses
 
 4. Expected Outcome
 The minimum viable product will include:
 A functional computer vision system that detects parked cars from a camera feed.
-Homography transformation to correct distorted angles and be easily integrated in our dashboard.
-A web-based dashboard displaying real0time parking availability and analytics.
+Homography transformation is used to correct distorted angles and is easily integrated into our dashboard.
+A web-based dashboard displaying real-time parking availability and analytics.
 A demo setup, with a test camera in a simulated/real parking lot, or with a video feed.
