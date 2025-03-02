@@ -2,7 +2,7 @@
 ParkVision - Justin Alega, Brant Bremer, Benjamin Biehl, Aaron Dubale, Cooper Wooley
 
 2. Problem Statement
-Parking ineficiency leads to congestion, wasted time, and frustration for drivers looking for available spots, especially in high-traffic areas. Current solutions rely on sensors or manual monitoring, which can be costly and difficult to maintain. A more scalable, automated system is needed to track real-time parking availability.
+Parking inefficiency leads to congestion, wasted time, and frustration for drivers looking for available spots, especially in high-traffic areas. Current solutions rely on sensors or manual monitoring, which can be costly and difficult to maintain. A more scalable, automated system is needed to track real-time parking availability.
 
 3. Proposed Solution
 ParkVision will provide real-time, smart parking management that will help drivers locate available parking spots and will allow for administrators to monitor lot occupancy. By using computer vision, it will process live camera feeds to detect parked vehicles and map their positions onto a corresponding top-down view. The system will integrate with a dashboard to display real-time availability, making parking more efficient.
