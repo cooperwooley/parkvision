@@ -1,0 +1,32 @@
+Project Title and Team Members
+ParkVision - Justin Alega, Brant Bremer, Benjamin Biehl, Aaron Dubale, Cooper Wooley
+
+1. User Stories
+
+As a driver, I want to have a real-time web dashboard of available spots, so that I can find an open spot. (Must Have)
+- There should be a number of available spots displayed.
+- It should be clear which spots are available.
+- The dashboard should update close to real time, to ensure it is accurate.
+
+As a driver, I want to be able to reserve spots ahead, so that I can ensure I get a spot. (Won't Have)
+- This would over complicate the system, and also would provide extra overhead for parking lot operations.
+
+As a parking lot administrator, I want to receive alerts when the lot is getting full, so that I can handle overflow
+parking issues. (Should Have)
+- A notification should be triggered when the parking lot capacity exceeds a certain amount.
+- The administrator should get a dashboard alert and possibly some type of text or email.
+
+2. Project Scope
+
+Parking inefficiency leads to congestion, wasted time, and frustration for drivers looking for available spots, especially
+in high-traffic areas. Current solutions rely on sensors or manual monitoring, which can be costly and difficult to maintain.
+A more scalable, automated system is needed to track real-time parking availability.
+
+The minimum viable product will include:
+A functional computer vision system that detects parked cars from a camera feed.
+Homography transformation is used to correct distorted angles and is easily integrated into our dashboard.
+A web-based dashboard displaying real-time parking availability and analytics.
+A demo setup, with a test camera in a simulated/real parking lot, or with a video feed.
+
+3. UML Diagrams
+
