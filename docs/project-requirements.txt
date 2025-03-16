@@ -5,35 +5,55 @@ ParkVision - Justin Alega, Brant Bremer, Benjamin Biehl, Aaron Dubale, Cooper Wo
 
 1. User Stories
 
-As a driver, I want to have a real-time web dashboard of available spots, so that I can find an open spot. (Must Have)
+a. As a driver, I want to have a real-time web dashboard of available spots, so that I can find an open spot. (Must Have)
 - There should be a number of available spots displayed.
 - It should be clear which spots are available.
 - The dashboard should update close to real time, to ensure it is accurate.
 
-As a driver, I want to be able to filter different spots/locations, so that I can find a convienent spot. (Could Have)
+b. As a driver, I want to be able to filter different spots/locations, so that I can find a convienent spot. (Could Have)
 - Can select different filters based on sections.
 - Only spots that meet the filter should be displayed, and show the occupancy.
 
-As a driver, I want to be able to reserve spots ahead, so that I can ensure I get a spot. (Won't Have)
+c. As a driver, I want to be able to reserve spots ahead, so that I can ensure I get a spot. (Won't Have)
 - This would over complicate the system, and also would provide extra overhead for parking lot operations.
 
-As a parking lot administrator, I want to receive alerts when the lot is getting full, so that I can handle overflow
+d. As a parking lot administrator, I want to receive alerts when the lot is getting full, so that I can handle overflow
 parking issues. (Should Have)
 - A notification should be triggered when the parking lot capacity exceeds a certain amount.
 - The administrator should get a dashboard alert and possibly some type of text or email.
 
-As a parking lot administrator, I want to monitor usage real time, so that I can easily manage the lot. (Must Have)
+e. As a parking lot administrator, I want to monitor usage real time, so that I can easily manage the lot. (Must Have)
 - The dashboard should display number of spots and a percent of how full it is.
 - Summary of data to show stats like which lots are usually full, which days are most full, etc.
 
-As a parking lot administrator, I want to be able to calibrate the camera, so that the vision model correctly
+f. As a parking lot administrator, I want to be able to calibrate the camera, so that the vision model correctly
 detects cars. (Must Have)
 - The system must allow for homography transformation through various settings.
 - The accuracy of the system should be around 90%.
 
-As a Business/University, I want the system to be easy to use and setup, so that it won't require too much overhead. (Should Have)
+g. As a Business/University, I want the system to be easy to use and setup, so that it won't require too much overhead. (Should Have)
 - There should be clear documentation on how the system works and how to use it.
 - Features like adjusting the homography should have a friendly built-in UI.
+
+h. As a driver, I want to receive notifications when a spot becomes available in my selected parking lot, so that I can quickly claim a space. (Could Have)
+- Users should be able to select a preferred area or lot.
+- Notifications should be timely to ensure spots are still available.
+
+i. As a driver, I want to view estimated wait times for occupied lots, so that I can plan my parking accordingly. (Could Have)
+- The system should provide an estimated wait time based on historical data and current trends.
+- Wait times should update regularly to reflect the changing conditions.
+
+j. As a parking lot administrator, I want to export parking data as reports, so that I can analyze trends and improve efficiency. (Should Have)
+- Reports should include metrics such as peak hours, busiest days, and average usage.
+- The export format should support common file types.
+
+k. As a parking lot administrator, I want to set restricted zones in the lot, so that I can designate special spaces for VIPs, staff, specific vehicles, or even metered spots. (Could Have)
+- The system should allow admins to mark certain spaces as restricted.
+- These restricted spaces should be clearly indicated on the dashboard.
+
+l. As a Business/University, I want to customize the dashboard's branding, so that it aligns with our institution. (Could Have)
+- The system should allow customization of colors and logos.
+- Branding settings should be easily adjustable through the admin interface.
 
 ---------------------------------------------------------------------------------------------------------------------
 
