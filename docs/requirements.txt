@@ -1,12 +1,18 @@
 Project Title and Team Members
 ParkVision - Justin Alega, Brant Bremer, Benjamin Biehl, Aaron Dubale, Cooper Wooley
 
+---------------------------------------------------------------------------------------------------------------------
+
 1. User Stories
 
 As a driver, I want to have a real-time web dashboard of available spots, so that I can find an open spot. (Must Have)
 - There should be a number of available spots displayed.
 - It should be clear which spots are available.
 - The dashboard should update close to real time, to ensure it is accurate.
+
+As a driver, I want to be able to filter different spots/locations, so that I can find a convienent spot. (Could Have)
+- Can select different filters based on sections.
+- Only spots that meet the filter should be displayed, and show the occupancy.
 
 As a driver, I want to be able to reserve spots ahead, so that I can ensure I get a spot. (Won't Have)
 - This would over complicate the system, and also would provide extra overhead for parking lot operations.
@@ -15,6 +21,21 @@ As a parking lot administrator, I want to receive alerts when the lot is getting
 parking issues. (Should Have)
 - A notification should be triggered when the parking lot capacity exceeds a certain amount.
 - The administrator should get a dashboard alert and possibly some type of text or email.
+
+As a parking lot administrator, I want to monitor usage real time, so that I can easily manage the lot. (Must Have)
+- The dashboard should display number of spots and a percent of how full it is.
+- Summary of data to show stats like which lots are usually full, which days are most full, etc.
+
+As a ParkVision administrator, I want to be able to calibrate the camera, so that the vision model correctly
+detects cars. (Must Have)
+- The system must allow for homography transformation through various settings.
+- The accuracy of the system should be around 90%.
+
+As a Business/University, I want the system to be easy to use and setup, so that it won't require too much overhead. (Should Have)
+- There should be clear documentation on how the system works and how to use it.
+- Features like adjusting the homography should have a friendly built-in UI.
+
+---------------------------------------------------------------------------------------------------------------------
 
 2. Project Scope
 
@@ -27,6 +48,17 @@ A functional computer vision system that detects parked cars from a camera feed.
 Homography transformation is used to correct distorted angles and is easily integrated into our dashboard.
 A web-based dashboard displaying real-time parking availability and analytics.
 A demo setup, with a test camera in a simulated/real parking lot, or with a video feed.
+
+The minimum viable product will not include:
+A reservation feature to reserve spots ahead of time.
+A seperate Mobile App on top of the website.
+Parking lot data prediction using AI.
+
+The system will only intend to work with a clear and unobstructed view of the parking lot, and shouldn't expect to work otherwise.
+The system may experience delays due to processing speed, so updates may not truly be "real time", but will be close. The dashboard
+will be devloped to handle drivers and amdministrators, so there won't be complex user roles involved. 
+
+---------------------------------------------------------------------------------------------------------------------
 
 3. UML Diagrams
 
