@@ -26,7 +26,7 @@ As a parking lot administrator, I want to monitor usage real time, so that I can
 - The dashboard should display number of spots and a percent of how full it is.
 - Summary of data to show stats like which lots are usually full, which days are most full, etc.
 
-As a ParkVision administrator, I want to be able to calibrate the camera, so that the vision model correctly
+As a parking lot administrator, I want to be able to calibrate the camera, so that the vision model correctly
 detects cars. (Must Have)
 - The system must allow for homography transformation through various settings.
 - The accuracy of the system should be around 90%.
