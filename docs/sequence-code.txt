@@ -1,0 +1,65 @@
+use-case)
+
+graph TD;
+    Driver -->|View real-time availability| Dashboard
+    Driver -->|Filter parking spots| Dashboard
+    
+    ParkingLotAdmin -->|Monitor lot usage| Dashboard
+    ParkingLotAdmin -->|Receive alerts| NotificationSystem
+    ParkingLotAdmin -->|Calibrate camera| VisionSystem
+    ParkingLotAdmin -->|Setup system| SystemConfig
+    NotificationSystem -.->|Threshold exceeded| ParkingLotAdmin
+    
+    Business -->|Setup and configure system| SystemConfig
+
+    subgraph ParkVision System
+        Dashboard
+        VisionSystem
+        NotificationSystem
+        SystemConfig
+    end
+
+a)
+
+sequenceDiagram
+    participant Driver
+    participant WebDashboard
+    participant Database
+    participant VisionModel
+    
+    Driver->>WebDashboard: Request real-time parking data
+    WebDashboard->>Database: Fetch parking occupancy
+    Database->>VisionModel: Request latest detection results
+    VisionModel-->>Database: Send updated parking data
+    Database-->>WebDashboard: Return parking data
+    WebDashboard-->>Driver: Display available spots
+
+d)
+
+sequenceDiagram
+    participant VisionModel
+    participant Database
+    participant NotificationSystem
+    participant ParkingLotAdmin
+    
+    VisionModel->>Database: Update parking occupancy
+    Database->>NotificationSystem: Check if lot is full
+    alt Lot is full
+        NotificationSystem->>ParkingLotAdmin: Send alert (Email/SMS)
+        ParkingLotAdmin->>Dashboard: Check lot status
+    end
+
+
+f)
+
+sequenceDiagram
+    participant ParkingLotAdmin
+    participant WebDashboard
+    participant VisionModel
+    
+    ParkingLotAdmin->>WebDashboard: Open calibration settings
+    WebDashboard->>VisionModel: Adjust homography transformation
+    VisionModel-->>WebDashboard: Process new settings
+    ParkingLotAdmin->>WebDashboard: Validate detection accuracy
+    WebDashboard-->>ParkingLotAdmin: Confirm calibration success
+
