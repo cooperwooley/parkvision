@@ -5,10 +5,12 @@ graph TD;
     Driver -->|Filter parking spots| Dashboard
     
     ParkingLotAdmin -->|Monitor lot usage| Dashboard
+    ParkingLotAdmin -->|Request Data Report| Dashboard
     ParkingLotAdmin -->|Receive alerts| NotificationSystem
     ParkingLotAdmin -->|Calibrate camera| VisionSystem
     ParkingLotAdmin -->|Setup system| SystemConfig
     NotificationSystem -.->|Threshold exceeded| ParkingLotAdmin
+    Dashboard -.->|Receive Data Report| ParkingLotAdmin
     
     Business -->|Setup and configure system| SystemConfig
 
