@@ -20,7 +20,7 @@
 
 
 ## Frontend (2 Members)
-### Justin, <Enter Name>
+### Justin, Brant
 - Build a React-based dashboard. If you believe React will take too long to learn, implement with Flask or DJango (Python)
 - Integrate with backend APIs
 - Create a map view of the lot with spot indicators
