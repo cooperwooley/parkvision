@@ -1,7 +1,7 @@
 # Park Vision Roles and Requirements
 
 ## OpenCV / Backend (2 Members)
-### Cooper, <Enter Name>
+### Cooper, Ben
 - Implement OpenCV-based spot detection
 - Test with webcam in small lot/simulated environment, or with video feeds
 - Deliver updates to database/backend, can either implement with Modules/Packages *boo* or JSON deliveries *yay*
