@@ -3,12 +3,15 @@
 ## Setup
 
 Please install the requirements before you proceed! (Current requirements.txt needs work)
+
 If you are on debian/ubuntu (I am using WSL for this project) `sudo apt update`, `sudo apt install libgl1` and `sudo apt install -y libxcb-xinerama0 libxkbcommon-x11-0 libxcb1 libxcb-util1 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libgl1 libglib2.0-0 libsm6 libxrender1 libxext6`
+
 Install OpenCV `pip install opencv-python`
 
 ## Running
 
 Currently expected to run from backend `cd parking-system/backend`
+
 Run using `python3 src/tests/camera_test.py`
 
 **IMPORTANT**: For the full effect, for the first run uncomment `# define_parking_spaces(img)` in `main()`. This will have you manually define each parking spot (top left corner, bottom right corner) and create a corresponding json file. To exit, press any key on your keyboard
