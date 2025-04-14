@@ -1,0 +1,27 @@
+Report Requirements:
+
+1. Project Summary (1-2 paragraphs)
+ParkVision is a smart parking management system that aims to reduce inefficiency in high-traffic parking areas through real-time vehicle detection and occupancy tracking. 
+The system uses computer vision to process live camera feeds, detect parked vehicles, and visually map their positions onto a user-friendly dashboard. 
+This allows drivers to locate available spots more easily while giving administrators real-time insights into lot usage.
+
+The original project scope has remained largely intact, but adjustments have been made in the choice of tools and technologies. 
+While the initial plan included exploring multiple frameworks for the dashboard, we chose to move forward with React due to its component-based design and flexibility for future expansion. 
+We also simplified some design elements early on to focus on delivering a clean and functional minimum viable product.
+
+2. Development Progress to Date
+
+3. Software Design and Architecture
+
+4. Code Management
+
+6. Timeline Assessment
+Our initial project timeline outlined parallel development tracks for the computer vision system, backend API, and frontend dashboard. 
+So far, we have been able to follow this timeline effectively. 
+The React-based dashboard is progressing well, and we’ve successfully set up the layout, integrated placeholder visuals, and begun preparing for backend data integration.
+
+No major delays have occurred at this point. 
+The upcoming development phases will focus on connecting the backend APIs and finalizing the vehicle detection pipeline. 
+If progress continues at the current pace, we expect to stay on schedule and complete all key components in time for the final demo.
+
+7. Next Phase Implementation Plan
