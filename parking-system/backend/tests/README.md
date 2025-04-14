@@ -14,7 +14,7 @@ Currently expected to run from backend `cd parking-system/backend`
 
 Run using `python3 src/tests/camera_test.py`
 
-**IMPORTANT**: For the full effect, for the first run uncomment `# define_parking_spaces(img)` in `main()`. This will have you manually define each parking spot (top left corner, bottom right corner) and create a corresponding json file. To exit, press any key on your keyboard
+**IMPORTANT**: For the full effect, for the first run uncomment `# define_parking_spaces(img)` in `main()`. You will be prompted to select a mode, which you can toggle with the 'T' key, and then press enter to lock in your choice. Rectangular will have you manually define each parking spot (top left corner, bottom right corner) and Skewed will have you define each spot (top left corner, bottom left corner, bottom right corner, top right corner), and create a corresponding json file. To exit, press any key on your keyboard.
 
 Currently the only detection method that has been optimized to work is `detect_cars_background_subtraction()` (see image). Very simply, this takes the empty parking lot and the used parking lot images, grayscales them, creates a vector diff image of the two, applies a threshold to the image (value above x will be white, below black) and then dilates (fills in holes) the image. If the space within a defined parking spot is greater than 50%, we define that as there being a car and mark the spot as occupied. You can play around with the other methods by uncommenting them in `test_monitoring()`.
 
