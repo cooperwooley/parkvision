@@ -14,6 +14,16 @@ We also simplified some design elements early on to focus on delivering a clean 
 3. Software Design and Architecture
 
 4. Code Management
+The project uses Git as the version control system to manage code changes and track development progress.
+
+The repository is structured to ensure clarity and maintainability. Key components of the repository include:
+  -Main Branch: This branch contains the production-ready code. It is kept stable and reflects the latest tested release version.
+  -Personal Branches: For each person, a separate branch is created for them to work on separately from the main branch. This allows for isolated development of individual components without affecting the overall stability of the codebase.
+  -Documentation: A separate folder holds all project-related documentation, including requirements, architecture, and user guides, ensuring that all relevant information is easily accessible.
+
+In this repository, each developer has their own development branch, where they work on different features, bug fixes, or improvements independently. Once a developer completes their work, they submit a pull request to merge their changes into the main branch. This ensures that development is isolated per developer while maintaining a stable main branch.
+
+When a developer completes their work on their branch, they submit a pull request for review. The request is reviewed by at least one other team member, who evaluates the code for quality, consistency, and potential issues. Feedback is provided, and necessary changes are made before merging into the main or development branch. This process ensures that all code is properly reviewed, minimizing errors and ensuring consistent quality throughout the project.
 
 6. Timeline Assessment
 Our initial project timeline outlined parallel development tracks for the computer vision system, backend API, and frontend dashboard. 
