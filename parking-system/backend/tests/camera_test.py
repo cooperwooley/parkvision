@@ -4,12 +4,20 @@ import os
 from datetime import datetime
 import json
 
-empty_lot_path = 'tests/empty_lot.png'
-used_lot_path = 'tests/used_lot.png'
-json_path = 'tests/parking_spots.json'
+empty_lot_path = 'lot/empty_lot.png'
+used_lot_path = 'lot/used_lot.png'
+json_path = 'parking_spots.json'
 
 cascade_path = os.path.join(os.path.dirname(__file__), 'haarcascade_car.xml')
 parking_spots = []
+is_skewed = False
+
+def toggle_mode():
+    global is_skewed
+    is_skewed = not is_skewed
+    mode = "Skewed" if is_skewed else "Rectangular"
+    print(f"Switching to {mode} mode")
+    return mode
 
 # Extracts a reference frame from a video file
 def capture_reference_image(video_path, frame_number=0):
@@ -30,7 +38,7 @@ def capture_reference_image(video_path, frame_number=0):
     ret, frame = cap.read()
 
     if ret:
-        cv.imwrite('emtpy_parking_lot.jpg', frame)
+        cv.imwrite('empty_parking_lot.jpg', frame)
         print(f"Reference image saved from frame {frame_number}")
     else:
         print("Error: Could not read frame")
@@ -44,32 +52,84 @@ def click_event(event, x, y, flags, param):
     global parking_spots
     if event == cv.EVENT_LBUTTONDOWN:
         # Add first point of a parking spot
-        if len(parking_spots) % 2 == 0:
+        if len(parking_spots) % (4 if is_skewed else 2) == 0:
             parking_spots.append((x, y))
-            print(f"First point: ({x}, {y})")
+            print(f"Point {len(parking_spots)}: ({x}, {y})")
         else:
-            # Add second point to define a rectangle
+            # Add subsequent point(s)
             parking_spots.append((x, y))
-            print(f"Second point: ({x}, {y})")
-            # Draw the rectangle
-            cv.rectangle(img, parking_spots[-2], parking_spots[-1], (0, 255, 0), 2)
+            print(f"Point {len(parking_spots)}: ({x}, {y})")
+
+            # Draw the defined lot over image
+            if is_skewed and len(parking_spots) % 4 == 0:
+                pts = np.array(parking_spots[-4:], np.int32)
+                pts = pts.reshape((-1, 1, 2))
+                cv.polylines(img, [pts], isClosed=True, color=(0, 255, 0), thickness=2)
+            elif not is_skewed and len(parking_spots) % 2 == 0:
+                cv.rectangle(img, parking_spots[-2], parking_spots[-1], (0, 255, 0), 2)
+
             cv.imshow('image', img)
 
 def define_parking_spaces(img):
-    cv.imshow('Empty Lot', img)
+    global is_skewed
+
+    mode_window = "Select Mode"
+    mode = "Skewed" if is_skewed else "Rectangular"
+    black_screen = np.zeros_like(img)
+
+    while True:
+        display = black_screen.copy()
+        cv.putText(display, "Hit T to toggle mode", (30, 200),
+                   cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        cv.putText(display, "Press Enter to continue", (30, 250),
+                   cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        cv.putText(display, f"Current Mode: {mode}", (30, 300),
+                   cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+        cv.imshow(mode_window, display)
+        key = cv.waitKey(1) & 0xFF
+
+        if key == ord('t'):
+            mode = toggle_mode()
+        elif key == 13:  # Enter
+            break
+
+    cv.destroyWindow(mode_window)
+
+    working_img = img.copy()
+    display_img = working_img.copy()
+    cv.putText(display_img, f"Mode: {mode}", (10, working_img.shape[0] - 10),
+               cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+
+    cv.imshow('Empty Lot', display_img)
     cv.setMouseCallback('Empty Lot', click_event)
-    cv.waitKey(0)
+
+    while True:
+        key = cv.waitKey(1) & 0xFF
+        if key == 13 or key == 27:  # Enter or Esc to finish
+            break
+
     cv.destroyAllWindows()
 
     # Format data
     spots = []
-    for i in range(0, len(parking_spots), 2):
-        if i+1 < len(parking_spots):
+    for i in range(0, len(parking_spots), 4 if is_skewed else 2):
+        if is_skewed:
             x1, y1 = parking_spots[i]
-            x2, y2, = parking_spots[i+1]
+            x2, y2 = parking_spots[i+1]
+            x3, y3 = parking_spots[i+2]
+            x4, y4 = parking_spots[i+3]
             spots.append({
-                'id': i//2 + 1,
-                'x': min(x1, x2), 
+                'id': i // 4 + 1,
+                'points': [(x1, y1), (x2, y2), (x3, y3), (x4, y4)],
+                'status': 'empty'
+            })
+        else:
+            x1, y1 = parking_spots[i]
+            x2, y2 = parking_spots[i+1]
+            spots.append({
+                'id': i // 2 + 1,
+                'x': min(x1, x2),
                 'y': min(y1, y2),
                 'width': abs(x2 - x1),
                 'height': abs(y2 - y1),
@@ -121,7 +181,7 @@ class ParkingLotMonitor:
             })
 
             # Draw rectangle with color based on status
-            color = (0, 255, 0) if spot_status == 'emtpy' else (0, 0, 255)
+            color = (0, 255, 0) if spot_status == 'empty' else (0, 0, 255)
             cv.rectangle(frame, (x, y), (x+w, y+h), color, 2)
             cv.putText(frame, f"ID: {spot['id']} - {spot_status}", (x, y-5), cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
@@ -176,26 +236,51 @@ class ParkingLotMonitor:
         spots_status = []
 
         for spot in self.parking_spots:
-            x, y, w, h = spot['x'], spot['y'], spot['width'], spot['height']
-            spot_roi = thresh[y:y+h, x:x+w]
+            if 'points' in spot:
+                # Handle skewed spots
+                pts = np.array(spot['points'], dtype=np.float32)
+                dst_size = (int(max(np.linalg.norm(pts[0] - pts[1]), np.linalg.norm(pts[2] - pts[3]))),
+                            int(max(np.linalg.norm(pts[0] - pts[3]), np.linalg.norm(pts[1] - pts[2]))))
+                rect_pts = np.array([[0, 0], [dst_size[0]-1, 0], [dst_size[0]-1, dst_size[1]-1], [0, dst_size[1]-1]], dtype=np.float32)
 
-            # Calculate percentage of white pixels
-            white_pixel_percentage = np.sum(spot_roi == 255) / (w * h) * 100
+                matrix = cv.getPerspectiveTransform(pts, rect_pts)
+                warped = cv.warpPerspective(thresh, matrix, dst_size)
 
-            if white_pixel_percentage > 50:
-                spot_status = 'occupied'
-                color = (0, 0, 255) # Red 
+                # Calculate percentage of white pixels
+                white_pixel_percentage = np.sum(warped == 255) / (dst_size[0] * dst_size[1]) * 100
+
+                if white_pixel_percentage > 50:
+                    spot_status = 'occupied'
+                    color = (0, 0, 255)
+                else:
+                    spot_status = 'empty'
+                    color = (0, 255, 0)
+
+                cv.polylines(frame, [pts.astype(np.int32)], isClosed=True, color=color, thickness=2)
+
             else:
-                spot_status = 'empty'
-                color = (0, 255, 0)
+                # Handle rectangular spots
+                x, y, w, h = spot['x'], spot['y'], spot['width'], spot['height']
+                spot_roi = thresh[y:y+h, x:x+w]
+
+                # Calculate percentage of white pixels
+                white_pixel_percentage = np.sum(spot_roi == 255) / (w * h) * 100
+
+                if white_pixel_percentage > 50:
+                    spot_status = 'occupied'
+                    color = (0, 0, 255)
+                else:
+                    spot_status = 'empty'
+                    color = (0, 255, 0)
+
+                cv.rectangle(frame, (x, y), (x+w, y+h), color, 2)
 
             spots_status.append({
                 'id': spot['id'],
                 'status': spot_status
             })
-
-            cv.rectangle(frame, (x, y), (x+w, y+h), color, 2)
-            cv.putText(frame, f"ID: {spot['id']} - {spot_status}", (x, y-5), cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            label_pos = (spot['x'], spot['y'] - 5) if 'x' in spot else tuple(pts[0].astype(int))
+            cv.putText(frame, f"ID: {spot['id']} - {spot_status}", label_pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
         cv.waitKey(0)
         return frame, spots_status
