@@ -51,3 +51,6 @@ In the upcoming development phase, we'd like to focus on automating the OpenCV c
 We will also begin designing the project's database. We currently have a rough conceptial layout, but we have not formalized the schema. Once this is done, the backend will store the parking spot objects in the database, allowing this data to be accessed and utilized by the frontend application.
 
 Our testing approach involves using a set of curated images. These images include empty parking lots, and parking lots with several occupied spots. Moving forward, we will create more of these images to test more extreme cases (distorted angles, fully occupied lots, vehicles parked outside of defined spots, etc.). This expanded test suite will ensure the system performs reliably under a wider range of real-world conditions.
+
+GitHub Repo:
+https://github.com/cooperwooley/parkvision
