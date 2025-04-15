@@ -14,6 +14,15 @@ The backend development has progressed smoothly. So far, a skeleton for the actu
 For the OpenCV implementations within ParkVision, we have been mostly exploring the various utilities the package provides. We created several test programs to begin developing the necessary components for the system. One key feature allows for the definition of parking spots and car detection. We can now manually define parking spots by selecting opposite corners when prompted. Once defined,  the spot objects are stored into a JSON file for future use. We then defined three different car detection algorithms but currently, we are using an algorithm that detects cars from background subtraction. Very simply, this takes an image of the empty parking lot and the used parking lot, creates an image of the absolute difference between the emtpy and used parking lot images, threshes it, dilates it, and then iterates over the spots in the json file. If the area defined by a spot has a white pixel percentage over 50%, this renders the spot as "occupied".
 
 3. Software Design and Architecture
+Overview of System Architecture
+-Input Layer: Receives images of cars parked in a parking lot from cameras
+-Processing Layer: Applies computer vision algorithms to detect vehicles and determine parking spot occupancy.
+-Application Layer: Handles business logic, such as mapping detections to specific parking spaces and managing system configuration.
+-Presentation Layer: Provides a web interface for end-users to view parking availability.
+
+Design Patterns Implemented:
+-Observer Pattern: Allows UI components or loggers to receive updates when parking spot statuses change.
+-Singleton Pattern: Ensures centralized management of system configurations and resources such as camera feeds.
 
 4. Code Management
 The project uses Git as the version control system to manage code changes and track development progress.
