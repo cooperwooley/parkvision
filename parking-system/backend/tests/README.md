@@ -10,9 +10,11 @@ Install OpenCV `pip install opencv-python`
 
 ## Running
 
-Currently expected to run from backend `cd parking-system/backend`
+Now runs from tests directory itself `cd parking-system/backend/tests`
 
-Run using `python3 src/tests/camera_test.py`
+Run using `python3 camera_test.py`
+
+Now has automatic spot detection (Still needs a lot of work). You can still follow the important line under this, but in order to use automatic detection make sure `detect_parking_spaces_auto()` is uncommented and make sure the other method is commented.
 
 **IMPORTANT**: For the full effect, for the first run uncomment `# define_parking_spaces(img)` in `main()`. You will be prompted to select a mode, which you can toggle with the 'T' key, and then press enter to lock in your choice. Rectangular will have you manually define each parking spot (top left corner, bottom right corner) and Skewed will have you define each spot (top left corner, bottom left corner, bottom right corner, top right corner), and create a corresponding json file. To exit, press any key on your keyboard.
 
@@ -26,6 +28,6 @@ To show the "Parking Lot Monitor" press any key on your keyboard. To exit the "P
 
 Transformations (Homography) to allow for skewed camera angles / distorted lenses to still have a proper overhead view of a lot
 
-Automatic parking spot detection (currently manual)
+Automate parameter selection for automatic parking spot detection. Currently, the parameters work well for the test images, but they likely would not work for other images (larger lots in same space leads to smaller space area, etc.)
 
 For testing sakes, clean up of file paths. Also, for some functions, it would be easier to actually pass the image as the parameter rather than the path and vice versa

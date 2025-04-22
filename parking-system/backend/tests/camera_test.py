@@ -19,6 +19,7 @@ def toggle_mode():
     print(f"Switching to {mode} mode")
     return mode
 
+
 # Extracts a reference frame from a video file
 def capture_reference_image(video_path, frame_number=0):
     cap  = cv.VideoCapture(video_path)
@@ -69,6 +70,7 @@ def click_event(event, x, y, flags, param):
                 cv.rectangle(img, parking_spots[-2], parking_spots[-1], (0, 255, 0), 2)
 
             cv.imshow('image', img)
+
 
 def define_parking_spaces(img):
     global is_skewed
@@ -139,7 +141,79 @@ def define_parking_spaces(img):
     with open(json_path, 'w') as f:
         json.dump(spots, f)
 
-        return spots
+
+def detect_parking_spaces_auto(img, sensitivity=75):
+    original = img.copy()
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+    # Apply edge detection
+    edges1 = cv.Canny(gray, sensitivity, sensitivity * 3)
+
+    # Find contours to draw box
+    contours, _ = cv.findContours(edges1, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+    contour_rectangle = img.copy()
+
+    # Draw bounding box
+    for contour in contours:
+        area = cv.contourArea(contour)
+
+        print(area)
+
+        if 500 < area < 6000: 
+            x, y, w, h = cv.boundingRect(contour)
+
+            cv.rectangle(contour_rectangle, (x, y), (x + w, y + h), (255, 255, 255), 3)
+
+    print('\n\n')
+    # Redo previous operations
+    gray = cv.cvtColor(contour_rectangle, cv.COLOR_BGR2GRAY)
+    edges = cv.Canny(gray, sensitivity, sensitivity * 3)
+    contours, _ = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+
+    spots = []
+    spot_id = 1
+
+    def is_near_existing(x, y, w, h, existing_boxes, threshold=10):
+        for ex, ey, ew, eh in existing_boxes:
+            if abs(x - ex) < threshold and abs(y - ey) < threshold and abs(w - ew) < threshold and abs(h - eh) < threshold:
+                return True
+        return False
+
+    existing_boxes = []
+    for contour in contours:
+        area = cv.contourArea(contour)
+        print(area)
+
+        if 500 < area < 5000:
+            x, y, w, h = cv.boundingRect(contour)
+            if not is_near_existing(x, y, w, h, existing_boxes):
+                existing_boxes.append((x, y, w, h))
+                spots.append({
+                    'id': spot_id,
+                    'x': x,
+                    'y': y,
+                    'width': w,
+                    'height': h,
+                    'status': 'empty'
+                })
+
+                cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv.putText(img, str(spot_id), (x + 5, y + 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                spot_id += 1
+
+    # Show the images
+    cv.imshow('Original', original)
+    cv.imshow('Edges', edges1)
+    cv.imshow('Contour', contour_rectangle)
+    cv.imshow('Detected Parking Spots', img)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+    # Save to JSON file
+    with open('parking_spots.json', 'w') as f:
+        json.dump(spots, f)
+    
     
 class ParkingLotMonitor:
     def __init__(self):
@@ -331,13 +405,13 @@ class ParkingLotMonitor:
         cv.destroyAllWindows()
 
 
-
 if __name__ == "__main__":
     img = capture_reference_image(empty_lot_path)
     img = cv.resize(img, (512, 512))
 
     # Only run first time
     # define_parking_spaces(img)
+    detect_parking_spaces_auto(img)
 
     monitor = ParkingLotMonitor()
     monitor.test_monitoring(empty_lot_path, used_lot_path)
