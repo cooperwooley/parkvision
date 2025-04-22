@@ -1,34 +1,22 @@
-from flask import Blueprint, jsonify, request
-from ..models.parking_spot import ParkingSpot, db
-from ..utils.camera_processor import process_camera_feed
+from flask import jsonify, request
+from ..app import app
+from ..models.parking_lot import ParkingLot
+from ..models.parking_spot import ParkingSpot
+from ..models.spot_status import SpotStatus
 
-parking_routes = Blueprint('parking_routes', __name__)
-
-@parking_routes.route('/api/spots', methods=['GET'])
-def get_parking_spots():
-    spots = ParkingSpot.query.all()
+@app.route('/api/parking-lots', methods=['GET'])
+def get_parking_lots():
+    lots = ParkingLot.query.all()
     return jsonify([{
-        'id': spot.id,
-        'lot_name': spot.lot_name,
-        'status': spot.status,
-        'last_updated': spot.last_updated.isoformat()
-    } for spot in spots])
+        'id': lot.id,
+        'name': lot.name,
+        'total_spaces': lot.total_spaces,
+        'address': lot.address
+    } for lot in lots])
 
-@parking_routes.route('/api/process_feed', methods=['POST'])
-def process_parking_feed():
-    # Assume the camera feed is updated via a POST request (URL or direct image)
-    file = request.files['camera_feed']
-    spots = process_camera_feed(file)
+@app.route('/api/parking_lots/<int:lot_id>/status', methods=['GET'])
+def get_lot_status(lot_id):
+    # TODO: Query to get current status of all spots in lot
+    result = None
 
-    # Process spots and update database
-    for spot in spots:
-        existing_spot = ParkingSpot.query.get(spot['id'])
-        if existing_spot:
-            existing_spot.status = spot['status']
-            existing_spot.last_updated = spot['last updated']
-        else:
-            new_spot = ParkingSpot(id=spot['id'], lot_name=spot['lot_name'], status=spot['status'], last_updated=spot['last updated'])
-            db.session.add(new_spot)
-
-    db.session.commit()
-    return jsonify({'message': 'Parking feed processed successfully'}), 200
+    return jsonify({'status': 'success', 'data': result})
