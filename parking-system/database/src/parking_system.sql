@@ -5,7 +5,7 @@ CREATE TABLE parking_lots (
     total_spaces INTEGER NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE parking_spots (
@@ -44,7 +44,7 @@ CREATE TABLE users (
 CREATE TABLE parking_analytics (
     id SERIAL PRIMARY KEY,
     parking_lot_id INTEGER REFERENCES parking_lots(id) ON DELETE CASCADE,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_spaces INTEGER NOT NULL,
     occupied_spaces INTEGER NOT NULL,
     occupancy_rate FLOAT GENERATED ALWAYS AS (CASE WHEN total_spaces > 0 THEN occupied_spaces::FLOAT / total_spaces ELSE 0 END) STORED,
