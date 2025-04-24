@@ -1,22 +1,21 @@
-from flask import jsonify, request
-from ..app import app
-from ..models.parking_lot import ParkingLot
-from ..models.parking_spot import ParkingSpot
-from ..models.spot_status import SpotStatus
+from flask import Blueprint, render_template, jsonify
+from models.spot import ParkingSpot
+from models.lot import ParkingLot
+from extensions import db
 
-@app.route('/api/parking-lots', methods=['GET'])
-def get_parking_lots():
+parking_bp = Blueprint('parking', __name__)
+
+@parking_bp.route('/')
+def index():
+    spots = ParkingSpot.query.all()
+    return render_template('index.html', spots=spots)
+
+@parking_bp.route("/debug/lot", methods=["GET"])
+def show_lot_data():
     lots = ParkingLot.query.all()
-    return jsonify([{
-        'id': lot.id,
-        'name': lot.name,
-        'total_spaces': lot.total_spaces,
-        'address': lot.address
-    } for lot in lots])
+    spots = ParkingSpot.query.all()
 
-@app.route('/api/parking_lots/<int:lot_id>/status', methods=['GET'])
-def get_lot_status(lot_id):
-    # TODO: Query to get current status of all spots in lot
-    result = None
-
-    return jsonify({'status': 'success', 'data': result})
+    return jsonify({
+        "lots": [lot.to_dict() for lot in lots],
+        "spots": [spot.to_dict() for spot in spots]
+    })
