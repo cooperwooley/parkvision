@@ -1,0 +1,13 @@
+from ..app import db
+from models.parking_spot import ParkingSpot
+from datetime import datetime
+
+class SpotStatus(db.Model):
+    __tablename__ = 'spot_status'
+
+    id = db.Column(db.Integer, primary_key=True)
+    parking_spot_id = db.Column(db.Integer, db.ForeignKey(ParkingSpot.id))
+    status = db.Column(db.String(20), nullable=False)
+    detected_at = db.Column(db.DateTime, default=datetime.now(datetime.timezone.utc))
+    detection_method = db.Column(db.String(50))
+    image_path = db.Column(db.Text)
