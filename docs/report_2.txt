@@ -1,0 +1,10 @@
+Frontend:
+
+
+Database:
+The overall database schema has been finalized and implemented using PostgreSQL. We created the tables necessary for storing information about parking lots, spots, status updates, users, and analytics. We also added relevant indexes and triggers to improve query performance and maintain data consistency.
+
+Backend:
+This week we began finalizing our test functions for the OpenCV components. We added a function to toggle a "skew mode" when manually selecting parking spots from an image. Instead of selecting two diagonal corners for a spot, you would select all four corners to account for camera angles that are not direction in the overhead perspective. We also created an algorithm to automatically detect parking spots from an image (initially manual for testing) and store the data in a JSON file. 
+Outside of the OpenCV test functions, we began actually wrapping our backend app in a Flask framework. We started by implementing the database into models and then creating simple routes for data retrieval. We also created a test app, just to begin testing our OpenCV components and their implementations. We also created a Docker file, so that we could containerize the application and ensure consistent environments across development and testing.
+We still need to finalize the backend and implementation of our OpenCV components, but we're at a point where we can begin integration of the frontend to deploy our MVP. This should also include simple analytics and possibly include camera/parking lot setup (for multiple lots). We hope to create a small video of a parking lot that can demonstrate the app working "live", because in concept, a live camera feed is the same as a video file for our purposes.
