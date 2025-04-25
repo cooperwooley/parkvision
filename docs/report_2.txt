@@ -3,7 +3,6 @@ This week, we developed a basic React-based dashboard using hardcoded images and
 The overall layout and design of the application has gone well, we just need to add more features to achieve our minimum viable product.
 We still need to integrate using the APIs, as well as specific tools for acessing multiple lots and video feeds.
 
-
 Database:
 The overall database schema has been finalized and implemented using PostgreSQL. We created the tables necessary for storing information about parking lots, spots, status updates, users, and analytics. We also added relevant indexes and triggers to improve query performance and maintain data consistency.
 
