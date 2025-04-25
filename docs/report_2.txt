@@ -1,4 +1,7 @@
 Frontend:
+This week, we developed a basic React-based dashboard using hardcoded images and values to show what the finalized application should look like. 
+The overall layout and design of the application has gone well, we just need to add more features to achieve our minimum viable product.
+We still need to integrate using the APIs, as well as specific tools for acessing multiple lots and video feeds.
 
 
 Database:
