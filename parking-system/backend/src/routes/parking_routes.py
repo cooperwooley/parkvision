@@ -1,21 +1,30 @@
-from flask import Blueprint, render_template, jsonify
-from models.spot import ParkingSpot
-from models.lot import ParkingLot
-from extensions import db
+from flask import Blueprint, request, jsonify
+from models.parking_lot import ParkingLot
+from models.parking_spot import ParkingSpot
+from utils.camera_processor import detect_parking_spaces_auto, get_current_frame_for_lot, detect_cars_background_subtraction
+from utils.database_manager import init_lot_db, update_lot_info_db
 
 parking_bp = Blueprint('parking', __name__)
 
-@parking_bp.route('/')
-def index():
-    spots = ParkingSpot.query.all()
-    return render_template('index.html', spots=spots)
+@parking_bp.route('/initialize_lot', methods=['GET'])
+def initialize_lot_route():
+    data = request.get_json() # expect JSON like {"video_path": "..."}
+    video_path = data.get('video_path')
 
-@parking_bp.route("/debug/lot", methods=["GET"])
-def show_lot_data():
-    lots = ParkingLot.query.all()
-    spots = ParkingSpot.query.all()
+    if not video_path:
+        return jsonify({"error": "video_path not provided"}), 400
+    
+    lot_info = detect_parking_spaces_auto(video_path)
+    init_lot_db(lot_info)
+    return jsonify(lot_info)
 
-    return jsonify({
-        "lots": [lot.to_dict() for lot in lots],
-        "spots": [spot.to_dict() for spot in spots]
-    })
+@parking_bp.route('/lot_status/<int:lot_id>', methods=['GET'])
+def lot_status(lot_id):
+    # Capture current frame
+    current_frame = get_current_frame_for_lot(lot_id)
+    # Run car detection
+    updated_info = detect_cars_background_subtraction(current_frame)
+    # Run car detection
+    update_lot_info_db(lot_id, updated_info)
+
+    return jsonify(updated_info)

@@ -4,6 +4,7 @@ CREATE TABLE parking_lots (
     address TEXT,
     total_spaces INTEGER NOT NULL,
     description TEXT,
+    init_frame_path TEXT, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
