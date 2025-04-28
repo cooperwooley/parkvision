@@ -10,4 +10,3 @@ class SpotStatus(db.Model):
     status = db.Column(db.String(20), nullable=False)
     detected_at = db.Column(db.DateTime, default=datetime.now(datetime.timezone.utc))
     detection_method = db.Column(db.String(50))
-    image_path = db.Column(db.Text)

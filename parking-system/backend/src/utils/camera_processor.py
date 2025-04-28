@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
-from datetime import datetime
-from utils.database_manager import get_current_frame_for_lot, get_background_frame, get_parking_spots
+import os
+from utils.database_manager import get_latest_lot_id, get_background_frame, get_parking_spots
 
 # Extracts a reference frame from a video file
 def capture_reference_image(video_path, frame_number=0):
@@ -14,7 +14,14 @@ def capture_reference_image(video_path, frame_number=0):
     ret, frame = cap.read()
 
     if ret:
-        cv.imwrite('empty_parking_lot.jpg', frame)
+        static_folder = os.path.join(os.getcwd(), 'static')
+        if not os.path.exists(static_folder):
+            os.makedirs(static_folder)
+
+        image_counter = get_latest_lot_id() + 1
+        frame_path = f'static/{image_counter}.jpg'
+
+        cv.imwrite(frame_path, frame)
         print(f"Reference image saved from frame {frame_number}")
     else:
         print("Error: Could not read frame")
@@ -26,7 +33,7 @@ def capture_reference_image(video_path, frame_number=0):
 
 
 def detect_parking_spaces_auto(video_path, sensitivity=75):
-    img = capture_reference_image(video_path)
+    img, img_path = capture_reference_image(video_path)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     # Apply edge detection
@@ -78,9 +85,7 @@ def detect_parking_spaces_auto(video_path, sensitivity=75):
                 })
                 spot_id += 1
 
-    # TODO: Update DB, return lot info
-
-    return spots
+    return spots, img_path
 
 
 def detect_cars_background_subtraction(frame, lot_id):
