@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Initialize Parking Lot</title>
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+
+            // Collect the form data
+            const formData = {
+                video_path: document.querySelector('input[name="video_path"]').value,
+                name: document.querySelector('input[name="name"]').value,
+                description: document.querySelector('input[name="description"]').value,
+                address: document.querySelector('input[name="address"]').value
+            };
+
+            // Send the data via Fetch API as JSON
+            fetch('{{ url_for("parking.initialize_lot_route") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)  // Send as JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show success message or handle the response
+                if (data.error) {
+                    document.getElementById('error-message').innerText = data.error;
+                } else {
+                    document.getElementById('success-message').innerText = 'Parking lot initialized successfully!';
+                    // Redirect to the initialize_lot page (or any other page you want)
+                    setTimeout(() => {
+                        window.location.href = '/initialize_lot';  // Redirect after 2 seconds
+                    }, 2000);  // Adjust the delay as needed
+                }
+            })
+            .catch(error => {
+                document.getElementById('error-message').innerText = 'There was an error processing the request.';
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Initialize Parking Lot</h1>
+
+    <p id="success-message" style="color: green;"></p>
+    <p id="error-message" style="color: red;"></p>
+
+    <form onsubmit="submitForm(event)">
+        <label>Video Path:</label><br>
+        <input type="text" name="video_path" value="utils/lot_footage.mp4" required><br><br>
+
+        <label>Lot Name:</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Description:</label><br>
+        <input type="text" name="description"><br><br>
+
+        <label>Address:</label><br>
+        <input type="text" name="address"><br><br>
+
+        <button type="submit">Initialize Lot</button>
+    </form>
+</body>
+</html>

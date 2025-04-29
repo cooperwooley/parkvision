@@ -18,7 +18,7 @@ def capture_reference_image(video_path, frame_number=0):
         if not os.path.exists(static_folder):
             os.makedirs(static_folder)
 
-        image_counter = get_latest_lot_id() + 1
+        image_counter = get_latest_lot_id()
         frame_path = f'static/{image_counter}.jpg'
 
         cv.imwrite(frame_path, frame)
@@ -29,7 +29,7 @@ def capture_reference_image(video_path, frame_number=0):
 
     cap.release()
     
-    return frame
+    return frame, frame_path
 
 
 def detect_parking_spaces_auto(video_path, sensitivity=75):

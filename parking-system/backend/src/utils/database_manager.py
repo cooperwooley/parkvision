@@ -21,6 +21,7 @@ def init_lot_db(lot_info, name, frame_path, video_path, description="", address=
     )
     db.session.add(new_lot)
     db.session.commit()
+    print(f"Lot {name} added")
 
     # Create ParkingSpots
     for spot in lot_info:
@@ -33,6 +34,7 @@ def init_lot_db(lot_info, name, frame_path, video_path, description="", address=
             height=spot['height']
         )
         db.session.add(new_spot)
+        print(f"Spot {str(spot['id'])} for Lot {name}")
 
     db.session.commit()
 
@@ -58,7 +60,7 @@ def get_latest_lot_id():
     latest_lot_id = ParkingLot.query.order_by(ParkingLot.id.desc()).first()
 
     if latest_lot_id:
-        return latest_lot_id + 1
+        return latest_lot_id.id + 1
     return 1
 
 def get_current_frame_for_lot(lot_id):

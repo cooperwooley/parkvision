@@ -1,5 +1,5 @@
-from ..app import db
-from datetime import datetime
+from extensions import db
+from datetime import datetime, timezone
 
 class ParkingLot(db.Model):
     __tablename__ = 'parking_lots'
@@ -12,6 +12,5 @@ class ParkingLot(db.Model):
     init_frame_path = db.Column(db.Text)
     video_path = db.Column(db.Text)
     video_start_time = db.Column(db.Float)
-    created_at = db.Column(db.DateTime, default=datetime.now(datetime.timezone.utc))
-    updated_at = db.Column(db.Datetime, default=datetime.now(datetime.timezone.utc), onupdate=datetime.now(datetime.timezone.utc))
-    
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

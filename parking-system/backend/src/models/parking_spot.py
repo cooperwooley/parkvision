@@ -1,6 +1,6 @@
-from ..app import db
+from extensions import db
 from models.parking_lot import ParkingLot
-from datetime import datetime
+from datetime import datetime, timezone
 
 class ParkingSpot(db.Model):
     __tablename__ = 'parking_spots'
@@ -12,4 +12,4 @@ class ParkingSpot(db.Model):
     y = db.Column(db.Integer, nullable=False)
     width = db.Column(db.Integer, nullable=False)
     height = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now(datetime.timezone.utc))
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
