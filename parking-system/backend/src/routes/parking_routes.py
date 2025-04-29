@@ -5,6 +5,13 @@ from models.parking_lot import ParkingLot
 
 parking_bp = Blueprint('parking', __name__)
 
+
+"""
+    Handle parking lot initialization via GET and POST requests.
+
+    Returns:
+        JSON or HTML: If POST, returns JSON data of detected parking spots. If GET, renders an HTML form.
+"""
 @parking_bp.route('/initialize_lot', methods=['GET', 'POST'])
 def initialize_lot_route():
     if request.method == 'POST':
@@ -28,7 +35,17 @@ def initialize_lot_route():
     # If the method is GET, render the form
     return render_template('initialize_lot_form.html')
 
+
 # Commented out for now, until we can get the spot detection working again
+"""
+    Route for fetching lot status by ID.
+
+    Args:
+        lot_id (int): ID of the parking lot to get status for
+
+    Returns:
+        JSON data of parking lot info after running through car detection
+"""
 @parking_bp.route('/lot_status/<int:lot_id>', methods=['GET'])
 def lot_status(lot_id):
     # Capture current frame
@@ -39,6 +56,7 @@ def lot_status(lot_id):
     #update_lot_info_db(lot_id, updated_info)
     pass
     #return jsonify(updated_info)
+
 
 # Shows the info for specific lot id
 @parking_bp.route('/lot_info/<int:lot_id>', methods=['GET'])
@@ -61,3 +79,4 @@ def get_lot_info(lot_id):
     }
 
     return jsonify(lot_info)
+

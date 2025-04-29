@@ -5,6 +5,20 @@ from models.parking_spot import ParkingSpot
 from models.spot_status import SpotStatus
 from extensions import db
 
+"""
+    Initialize database records for a new parking lot and its spots.
+
+    Args:
+        lot_info (list): List of detected parking spots
+        name (str): Name of the parking lot
+        frame_path (str): Path to the saved reference image
+        video_path (str): Path to the lot's surveillance video
+        description (str, optional): Description of the lot
+        address (str, optional): Physical address of the lot
+
+    Returns:
+        None
+"""
 def init_lot_db(lot_info, name, frame_path, video_path, description="", address=""):
     description = description or "" # For None case
     address = address or "" # For None case
@@ -38,6 +52,17 @@ def init_lot_db(lot_info, name, frame_path, video_path, description="", address=
 
     db.session.commit()
 
+
+"""
+    Update the status of parking spots in the database.
+
+    Args:
+        lot_id (int): ID of the parking lot
+        updated_info (list): List of spot status dictionaries
+
+    Returns:
+        None
+"""
 def update_lot_info_db(lot_id, updated_info):
     # Update SpotStatus for each spot
     for spot_update in updated_info:
@@ -56,6 +81,13 @@ def update_lot_info_db(lot_id, updated_info):
 
     db.session.commit()
 
+
+"""
+    Get the ID for a new parking lot by incrementing the latest one.
+
+    Returns:
+        int: Next available parking lot ID
+"""
 def get_latest_lot_id():
     latest_lot_id = ParkingLot.query.order_by(ParkingLot.id.desc()).first()
 
@@ -63,6 +95,13 @@ def get_latest_lot_id():
         return latest_lot_id.id + 1
     return 1
 
+
+"""
+    Get the ID for a new parking lot by incrementing the latest one.
+
+    Returns:
+        int: Next available parking lot ID
+"""
 def get_current_frame_for_lot(lot_id):
     # TODO: Get frame of video at current time for the request being sent
     # Might have to add video_path to ParkingLot as well

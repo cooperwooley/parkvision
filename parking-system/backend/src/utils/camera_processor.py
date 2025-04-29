@@ -3,7 +3,16 @@ import numpy as np
 import os
 from utils.database_manager import get_latest_lot_id, get_background_frame, get_parking_spots
 
-# Extracts a reference frame from a video file
+"""
+    Capture a single reference frame from a video file and save it as an image.
+
+    Args:
+        video_path (str): Path to the video file
+        frame_number (int): Frame number to capture (default is 0)
+
+    Returns:
+        tuple: (captured frame as ndarray, path to saved image)
+"""
 def capture_reference_image(video_path, frame_number=0):
     cap  = cv.VideoCapture(video_path)
 
@@ -32,6 +41,16 @@ def capture_reference_image(video_path, frame_number=0):
     return frame, frame_path
 
 
+"""
+    Automatically detect parking spaces using edge detection on a video reference frame.
+
+    Args:
+        video_path (str): Path to the input video
+        sensitivity (int): Canny edge sensitivity (default: 75)
+
+    Returns:
+        tuple: (list of detected parking spot dictionaries, path to saved reference frame)
+"""
 def detect_parking_spaces_auto(video_path, sensitivity=75):
     img, img_path = capture_reference_image(video_path)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -88,6 +107,16 @@ def detect_parking_spaces_auto(video_path, sensitivity=75):
     return spots, img_path
 
 
+"""
+    Detect cars in a parking lot using background subtraction technique.
+
+    Args:
+        frame (np.ndarray): The current frame from the parking lot camera
+        lot_id (int): ID of the parking lot being monitored
+
+    Returns:
+        list: List of dictionaries with spot IDs and their occupancy status
+"""
 def detect_cars_background_subtraction(frame, lot_id):
         background = get_background_frame(lot_id)
 
