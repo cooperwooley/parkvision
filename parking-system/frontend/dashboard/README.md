@@ -1,8 +1,8 @@
 To run this dashboard, follow these commands:
 
-cd dashboard
-npm install
-npm run dev
+- cd dashboard
+- npm install
+- npm run dev
 
 # React + TypeScript + Vite
 
