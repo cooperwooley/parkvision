@@ -16,7 +16,7 @@
             };
 
             // Send the data via Fetch API as JSON
-            fetch('{{ url_for("parking.initialize_lot_route") }}', {
+            fetch('{{ url_for("parking.initialize_lot") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -50,7 +50,7 @@
 
     <form onsubmit="submitForm(event)">
         <label>Video Path:</label><br>
-        <input type="text" name="video_path" value="utils/lot_footage.mp4" required><br><br>
+        <input type="text" name="video_path" value="tests/lot_footage.mp4" required><br><br>
 
         <label>Lot Name:</label><br>
         <input type="text" name="name" required><br><br>

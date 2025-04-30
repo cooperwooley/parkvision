@@ -177,4 +177,4 @@ def detect_cars_background_subtraction(frame, lot_id):
                 'status': spot_status
             })
 
-        return spot_status
+        return spots_status

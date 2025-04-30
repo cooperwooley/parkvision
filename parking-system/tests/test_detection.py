@@ -7,7 +7,7 @@ BASE_URL = "http://localhost:5000"
 def initialize_lot():
     url = f"{BASE_URL}/initialize_lot"
     payload = {
-        "video_path": "/backend/src/tests/lot_footage.mp4",
+        "video_path": "tests/lot_footage.mp4",
         "name": "Test Lot 1",
         "description": "Test lot for detection validation",
         "address": "123 Test St"
