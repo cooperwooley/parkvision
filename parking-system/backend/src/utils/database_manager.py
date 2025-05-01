@@ -31,7 +31,7 @@ def init_lot_db(lot_info, name, frame_path, video_path, description="", address=
         address=address,
         init_frame_path=frame_path,
         video_path=video_path,
-        video_start_time=0.0
+        video_start_time=time.time()
     )
     db.session.add(new_lot)
     db.session.commit()
@@ -97,10 +97,10 @@ def get_latest_lot_id():
 
 
 """
-    Get the ID for a new parking lot by incrementing the latest one.
+    Get the current frame from video for specified lot.
 
     Returns:
-        int: Next available parking lot ID
+        int: "Current Frame"
 """
 def get_current_frame_for_lot(lot_id):
     # TODO: Get frame of video at current time for the request being sent

@@ -23,6 +23,8 @@ def capture_reference_image(video_path, frame_number=0):
     ret, frame = cap.read()
 
     if ret:
+        frame = remove_black_bars(frame)
+
         static_folder = os.path.join(os.getcwd(), 'static')
         if not os.path.exists(static_folder):
             os.makedirs(static_folder)
@@ -37,8 +39,38 @@ def capture_reference_image(video_path, frame_number=0):
         frame = None
 
     cap.release()
-    
+
     return frame, frame_path
+
+
+"""
+    Remove black bars from a frame/image to fix contour detection in parking space detection
+    
+    Args:
+        frame (np.ndarray): Frame/image removing black bars from
+
+    Returns:
+        np.ndarray: Cropped frame/image
+"""
+def remove_black_bars(frame):
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+    # Threshold to create binary mask
+    _, thresh = cv.threshold(gray, 1, 255, cv.THRESH_BINARY)
+
+    # Find contours
+    contours, _ = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+    # Get the largest contour (content area)
+    largest_contour = max(contours)
+
+    # Get bounding box
+    x, y, w, h = cv.boundingRect(largest_contour)
+
+    # Crop image
+    cropped_frame = frame[y:y+h, x:x+w]
+
+    return cropped_frame
 
 
 """
@@ -67,7 +99,7 @@ def detect_parking_spaces_auto(video_path, sensitivity=75):
     for contour in contours:
         area = cv.contourArea(contour)
 
-        if 500 < area < 6000: 
+        if 5000 < area < 20000: 
             x, y, w, h = cv.boundingRect(contour)
 
             cv.rectangle(contour_rectangle, (x, y), (x + w, y + h), (255, 255, 255), 3)
@@ -90,7 +122,7 @@ def detect_parking_spaces_auto(video_path, sensitivity=75):
     for contour in contours:
         area = cv.contourArea(contour)
 
-        if 500 < area < 5000:
+        if 500 < area < 16000:
             x, y, w, h = cv.boundingRect(contour)
             if not is_near_existing(x, y, w, h, existing_boxes):
                 existing_boxes.append((x, y, w, h))
@@ -120,8 +152,20 @@ def detect_parking_spaces_auto(video_path, sensitivity=75):
 def detect_cars_background_subtraction(frame, lot_id):
         background = get_background_frame(lot_id)
 
+        if background is None or frame is None:
+            raise ValueError("Background or current frame is None")
+        
+        frame = remove_black_bars(frame)
+
         # Convert to grayscale
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+        
+        if background.shape != gray.shape:
+            min_width = min(background.shape[1], gray.shape[1])
+            min_height = min(background.shape[0], gray.shape[0])
+
+            background = background[:min_height, :min_width]
+            gray = gray[:min_height, :min_width]
 
         # Calculate absolute difference
         frame_delta = cv.absdiff(background, gray)
@@ -130,51 +174,48 @@ def detect_cars_background_subtraction(frame, lot_id):
         thresh = cv.threshold(frame_delta, 25, 255, cv.THRESH_BINARY)[1]
 
         # Dilate the thresholded image to fill in holes
-        thresh = cv.dilate(thresh, None, iterations=2)
+        kernel = cv.getStructuringElement(cv.MORPH_RECT, (5, 5))
+        thresh = cv.dilate(thresh, kernel, iterations=2)
 
         spots_status = []
 
         parking_spots = get_parking_spots(lot_id)
 
         for spot in parking_spots:
-            if 'points' in spot:
-                # Handle skewed spots
-                pts = np.array(spot['points'], dtype=np.float32)
-                dst_size = (int(max(np.linalg.norm(pts[0] - pts[1]), np.linalg.norm(pts[2] - pts[3]))),
-                            int(max(np.linalg.norm(pts[0] - pts[3]), np.linalg.norm(pts[1] - pts[2]))))
-                rect_pts = np.array([[0, 0], [dst_size[0]-1, 0], [dst_size[0]-1, dst_size[1]-1], [0, dst_size[1]-1]], dtype=np.float32)
+            # Handle rectangular spots
+            x, y, w, h = spot['x'], spot['y'], spot['width'], spot['height']
+            spot_roi = thresh[y:y+h, x:x+w]
 
-                matrix = cv.getPerspectiveTransform(pts, rect_pts)
-                warped = cv.warpPerspective(thresh, matrix, dst_size)
+            # Calculate percentage of white pixels
+            white_pixel_percentage = np.sum(spot_roi == 255) / (w * h) * 100
 
-                # Calculate percentage of white pixels
-                white_pixel_percentage = np.sum(warped == 255) / (dst_size[0] * dst_size[1]) * 100
-
-                if white_pixel_percentage > 50:
-                    spot_status = 'occupied'
-                    color = (0, 0, 255)
-                else:
-                    spot_status = 'empty'
-                    color = (0, 255, 0)
-
-                cv.polylines(frame, [pts.astype(np.int32)], isClosed=True, color=color, thickness=2)
-
+            if white_pixel_percentage > 50:
+                spot_status = 'occupied'
+                color = (0, 0, 255)
             else:
-                # Handle rectangular spots
-                x, y, w, h = spot['x'], spot['y'], spot['width'], spot['height']
-                spot_roi = thresh[y:y+h, x:x+w]
+                spot_status = 'empty'
+                color = (0, 255, 0)
 
-                # Calculate percentage of white pixels
-                white_pixel_percentage = np.sum(spot_roi == 255) / (w * h) * 100
-
-                if white_pixel_percentage > 50:
-                    spot_status = 'occupied'
-                else:
-                    spot_status = 'empty'
+            cv.rectangle(frame, (x, y), (x+w, y+h), color, 2)
 
             spots_status.append({
                 'id': spot['id'],
                 'status': spot_status
             })
+
+            label_pos = (spot['x'], spot['y'] - 5)
+            cv.putText(frame, f"ID: {spot['id']} - {spot_status}", label_pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+        # For testing 
+        # static_folder = os.path.join(os.getcwd(), 'static')
+        # if not os.path.exists(static_folder):
+        #     os.makedirs(static_folder)
+
+        # image_counter = get_latest_lot_id() - 1
+        # frame_path = f'static/{image_counter}-car-detected.jpg'
+        # thresh_path = f'static/{image_counter}-car-thresh.jpg'
+
+        # cv.imwrite(frame_path, frame)
+        # cv.imwrite(thresh_path, thresh)
 
         return spots_status

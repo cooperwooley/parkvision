@@ -20,17 +20,19 @@ Initializes a new parking lot using a video file. Detects and saves parking spot
 ```
 **Response**
 ```json
-[
-  {
-    "id": 1,
-    "x": 100,
-    "y": 150,
-    "width": 50,
-    "height": 80,
-    "status": "empty"
-  },
-  ...
-]
+{ 
+  "lot_id": 1,
+  "spots": [
+    {
+      "id": 1,
+      "x": 100,
+      "y": 150,
+      "width": 50,
+      "height": 80,
+      "status": "empty"
+    },
+  ]
+}
 ```
 
 ### `GET /lot_status/<int:lot_id>`

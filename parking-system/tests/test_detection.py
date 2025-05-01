@@ -47,10 +47,13 @@ def main():
     time.sleep(5)
 
     result = initialize_lot()
-    if result and 'lot_id' in result:
-        get_lot_status(result['lot_id'])
-    else:
-        get_lot_status(1)
+
+    for _ in range(3):
+        time.sleep(10)
+        if result and 'lot_id' in result:
+            get_lot_status(result['lot_id'])
+        else:
+            get_lot_status(1)
 
 if __name__ == "__main__":
     main()

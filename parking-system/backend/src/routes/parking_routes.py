@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template
-from utils.camera_processor import detect_parking_spaces_auto, capture_reference_image, detect_cars_background_subtraction
-from utils.database_manager import init_lot_db, update_lot_info_db, get_current_frame_for_lot
+from utils.camera_processor import detect_parking_spaces_auto, detect_cars_background_subtraction
+from utils.database_manager import init_lot_db, update_lot_info_db, get_current_frame_for_lot, get_latest_lot_id
 from models.parking_lot import ParkingLot
 
 parking_bp = Blueprint('parking', __name__)
@@ -29,8 +29,16 @@ def initialize_lot():
         
         # Process the parking lot initialization
         lot_info, frame_path = detect_parking_spaces_auto(video_path)
+
+        if not lot_info:
+            return jsonify({"error": "No parking spots detected"}), 500
+
         init_lot_db(lot_info, name, frame_path, video_path, description, address)
-        return jsonify(lot_info)
+        lot_id = get_latest_lot_id() - 1
+        response = {"lot_id": lot_id,
+                    "spots": lot_info}
+        
+        return jsonify(response)
 
     # If the method is GET, render the form
     return render_template('initialize_lot_form.html')
