@@ -30,6 +30,51 @@ h1 {
   width: 100%;
 }
 
+/* 🔹 Header row for title + admin buttons */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+/* 🔹 Admin login / toggle buttons */
+.admin-toggle-btn,
+.admin-login-btn {
+  padding: 8px 16px;
+  background-color: #2d98da;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.admin-toggle-btn:hover,
+.admin-login-btn:hover {
+  background-color: #1e6bb8;
+}
+
+/* 🔹 Lot header */
+.lot-header {
+  margin-bottom: 1rem;
+}
+
+/* 🔹 Error message & loading */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.loading {
+  color: #34495e;
+  font-style: italic;
+  margin: 1rem 0;
+}
+
 .parking-container {
   position: relative;
   width: 100%;
