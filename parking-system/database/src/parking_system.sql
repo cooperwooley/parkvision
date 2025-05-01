@@ -4,6 +4,8 @@ CREATE TABLE parking_lots (
     address TEXT,
     total_spaces INTEGER NOT NULL,
     description TEXT,
+    init_frame_path TEXT, 
+    video_path TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -27,7 +29,6 @@ CREATE TABLE spot_status (
     detected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     -- For image recognition
     detection_method VARCHAR(50), -- 'background_subtraction', etc.
-    image_path TEXT -- Optional: path to snapshot that triggered status change
 );
 
 -- If planning authenticated access

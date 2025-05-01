@@ -13,11 +13,8 @@ def create_app():
     with app.app_context():
         # This takes in the json file generated from the camera_test.py file.
         # In the future you could put this in a loop to constantly update the database with correct information.
-        from utils.populate import populate_test_db
         db.create_all()
-        populate_test_db()
-
-    app.register_blueprint(parking_bp)
+        app.register_blueprint(parking_bp)
 
     return app
 

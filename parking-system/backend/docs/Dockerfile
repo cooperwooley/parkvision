@@ -8,7 +8,14 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Install dependencies
-COPY requirements.txt .
+COPY docs/requirements.txt .
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxrender1 \
+    libxext6 \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy the rest of the app

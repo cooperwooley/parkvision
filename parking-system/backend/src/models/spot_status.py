@@ -1,6 +1,6 @@
-from ..app import db
+from extensions import db
 from models.parking_spot import ParkingSpot
-from datetime import datetime
+from datetime import datetime, timezone
 
 class SpotStatus(db.Model):
     __tablename__ = 'spot_status'
@@ -8,6 +8,5 @@ class SpotStatus(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parking_spot_id = db.Column(db.Integer, db.ForeignKey(ParkingSpot.id))
     status = db.Column(db.String(20), nullable=False)
-    detected_at = db.Column(db.DateTime, default=datetime.now(datetime.timezone.utc))
+    detected_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     detection_method = db.Column(db.String(50))
-    image_path = db.Column(db.Text)
