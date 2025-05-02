@@ -42,6 +42,7 @@ def initialize_lot():
         "lot_id": lot_id
     })
 
+
 """
     Route for fetching lot status by ID and displaying test HTML Page.
 
@@ -51,8 +52,6 @@ def initialize_lot():
     Returns:
         JSON data of parking lot info after running through car detection
 """
-from models.parking_spot import ParkingSpot  # make sure this is imported
-
 @parking_bp.route('/lot_status/<int:lot_id>', methods=['GET'])
 def lot_status(lot_id):
     current_frame = get_current_frame_for_lot(lot_id)
@@ -63,43 +62,9 @@ def lot_status(lot_id):
     updated_info = detect_cars_background_subtraction(current_frame, lot_id)
     update_lot_info_db(lot_id, updated_info)
 
-    # Fetch lot metadata
-    lot = ParkingLot.query.filter_by(id=lot_id).first()
-    analytics = (
-        ParkingAnalytics.query
-        .filter_by(parking_lot_id=lot_id)
-        .order_by(ParkingAnalytics.time_stamp.desc())
-        .first()
-    )
-
-    # Fetch all spot details from DB
-    spot_records = ParkingSpot.query.filter_by(parking_lot_id=lot_id).all()
-    spot_dict = {spot.id: spot for spot in spot_records}
-
-    # Enrich each spot in updated_info with geometry + metadata
-    enriched_spots = []
-    for spot in updated_info:
-        spot_id = spot["spot_id"]
-        db_spot = spot_dict.get(spot_id)
-        if db_spot:
-            enriched_spots.append({
-                "spot_id": db_spot.id,
-                "spot_number": db_spot.spot_number,
-                "occupied": spot["occupied"],
-                "x": db_spot.x,
-                "y": db_spot.y,
-                "width": db_spot.width,
-                "height": db_spot.height
-            })
-
     response = {
         "lot_id": lot_id,
-        "lot_name": lot.name,
-        "lot_address": lot.address,
-        "lot_description": lot.description,
-        "spots": enriched_spots,
-        "total_spaces": analytics.total_spaces,
-        "occupied_spaces": analytics.occupied_spaces
+        "spots": updated_info,
     }
 
     return jsonify(response)

@@ -113,7 +113,6 @@ def update_lot_info_db(lot_id, updated_info):
     db.session.commit()
 
 
-
 """
     Get the ID for a new parking lot by incrementing the latest one.
 
