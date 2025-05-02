@@ -10,10 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
     "axios": "^1.9.0",
-=======
->>>>>>> 951e939 (Basic Dashboard)
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
