@@ -8,43 +8,39 @@ parking_bp = Blueprint('parking', __name__)
 
 # API ROUTES
 """
-    Handle parking lot initialization via GET and POST requests.
+    Handle parking lot initialization via POST request.
+
+    Expects:
+        JSON body with 'video_path' and 'name' (required),
+        'description' and 'address' (optional).
 
     Returns:
-        JSON or HTML: If POST, returns JSON data of detected parking spots. If GET, renders an HTML form.
+        JSON: Contains 'lot_id' and list of detected parking spots.
 """
-@parking_bp.route('/initialize_lot', methods=['GET', 'POST'])
+@parking_bp.route('/initialize_lot', methods=['POST'])
 def initialize_lot():
-    if request.method == 'POST':
-        # Get the form data as JSON
-        data = request.get_json()
-        video_path = data.get('video_path')
-        name = data.get('name')
-        description = data.get('description')
-        address = data.get('address')
+    data = request.get_json()
+    video_path = data.get('video_path')
+    name = data.get('name')
+    description = data.get('description')
+    address = data.get('address')
 
-        if not video_path:
-            return jsonify({"error": "video_path not provided"}), 400
-        if not name:
-            return jsonify({"error": "Lot name not provided"}), 400
-        
-        # Process the parking lot initialization
-        lot_info, frame_path = detect_parking_spaces_auto(video_path)
+    if not video_path:
+        return jsonify({"error": "video_path not provided"}), 400
+    if not name:
+        return jsonify({"error": "Lot name not provided"}), 400
 
-        if not lot_info:
-            return jsonify({"error": "No parking spots detected"}), 500
+    lot_info, frame_path = detect_parking_spaces_auto(video_path)
 
-        init_lot_db(lot_info, name, frame_path, video_path, description, address)
-        lot_id = get_latest_lot_id() - 1
-        response = {
-            "lot_id": lot_id,
-            "spots": lot_info
-        }
-        
-        return jsonify(response)
+    if not lot_info:
+        return jsonify({"error": "No parking spots detected"}), 500
 
-    # If the method is GET, render the form
-    return render_template('initialize_lot_form.html')
+    init_lot_db(lot_info, name, frame_path, video_path, description, address)
+    lot_id = get_latest_lot_id() - 1
+
+    return jsonify({
+        "lot_id": lot_id
+    })
 
 """
     Route for fetching lot status by ID and displaying test HTML Page.
@@ -55,28 +51,20 @@ def initialize_lot():
     Returns:
         JSON data of parking lot info after running through car detection
 """
+from models.parking_spot import ParkingSpot  # make sure this is imported
+
 @parking_bp.route('/lot_status/<int:lot_id>', methods=['GET'])
 def lot_status(lot_id):
-    # Capture current frame
     current_frame = get_current_frame_for_lot(lot_id)
-
     if current_frame is None:
-        # If no frame is available, API returns early
         return jsonify("No Frame")
 
-    # Run car detection
+    # Run car detection to get occupancy data
     updated_info = detect_cars_background_subtraction(current_frame, lot_id)
-
-    # Updated lot information
     update_lot_info_db(lot_id, updated_info)
 
-    # Get lot info
-    lot = (
-        ParkingLot.query
-        .filter_by(id=lot_id)
-    )
-
-    # Get analytics
+    # Fetch lot metadata
+    lot = ParkingLot.query.filter_by(id=lot_id).first()
     analytics = (
         ParkingAnalytics.query
         .filter_by(parking_lot_id=lot_id)
@@ -84,19 +72,40 @@ def lot_status(lot_id):
         .first()
     )
 
+    # Fetch all spot details from DB
+    spot_records = ParkingSpot.query.filter_by(parking_lot_id=lot_id).all()
+    spot_dict = {spot.id: spot for spot in spot_records}
+
+    # Enrich each spot in updated_info with geometry + metadata
+    enriched_spots = []
+    for spot in updated_info:
+        spot_id = spot["spot_id"]
+        db_spot = spot_dict.get(spot_id)
+        if db_spot:
+            enriched_spots.append({
+                "spot_id": db_spot.id,
+                "spot_number": db_spot.spot_number,
+                "occupied": spot["occupied"],
+                "x": db_spot.x,
+                "y": db_spot.y,
+                "width": db_spot.width,
+                "height": db_spot.height
+            })
+
     response = {
         "lot_id": lot_id,
         "lot_name": lot.name,
         "lot_address": lot.address,
         "lot_description": lot.description,
-        "spots": updated_info,
+        "spots": enriched_spots,
         "total_spaces": analytics.total_spaces,
         "occupied_spaces": analytics.occupied_spaces
     }
 
     return jsonify(response)
 
-# HTML ROUTES
+
+# HTML ROUTES FOR QUICK TESTING (Might just want to delete once React is working all good)
 """
     Handle parking lot initialization via GET and POST requests.
 
