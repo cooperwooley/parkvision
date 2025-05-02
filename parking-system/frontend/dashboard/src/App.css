@@ -30,6 +30,7 @@ h1 {
   width: 100%;
 }
 
+<<<<<<< HEAD
 /* 🔹 Header row for title + admin buttons */
 .header-row {
   display: flex;
@@ -75,6 +76,8 @@ h1 {
   margin: 1rem 0;
 }
 
+=======
+>>>>>>> 951e939 (Basic Dashboard)
 .parking-container {
   position: relative;
   width: 100%;
@@ -166,4 +169,8 @@ button {
 
 button:hover {
   background-color: #1e6bb8;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 951e939 (Basic Dashboard)
