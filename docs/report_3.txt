@@ -24,3 +24,18 @@ Ideas/Actions:
         - Admin login/authentication and respective routes.
     - Continue refining backend documentation.
     - Support frontend to begin integration with our systems.
+
+
+Frontend Report
+
+What went well:
+    - Completed the Admin and login page visuals.
+    - Updated main dashboard to better work with new features and APIs. 
+
+What didn't go well:
+    - Need to fully integrate routes from the backend.
+    - Add more features that achieve the MVP.
+
+Ideas/Actions:
+    - Begin working on implementing REST APIs into frontend.
+    - Improve documentation and allow the use of video feeds.
