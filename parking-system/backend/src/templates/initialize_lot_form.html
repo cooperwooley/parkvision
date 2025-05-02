@@ -16,7 +16,7 @@
             };
 
             // Send the data via Fetch API as JSON
-            fetch('{{ url_for("parking.initialize_lot") }}', {
+            fetch('{{ url_for("parking.initialize_lot_html") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

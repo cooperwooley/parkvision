@@ -1,11 +1,12 @@
 from flask import Blueprint, request, jsonify, render_template, url_for
 from utils.camera_processor import detect_parking_spaces_auto, detect_cars_background_subtraction
 from utils.database_manager import init_lot_db, update_lot_info_db, get_current_frame_for_lot, get_latest_lot_id
+from models.parking_lot import ParkingLot
 from models.parking_analytics import ParkingAnalytics
 
 parking_bp = Blueprint('parking', __name__)
 
-
+# API ROUTES
 """
     Handle parking lot initialization via GET and POST requests.
 
@@ -35,17 +36,18 @@ def initialize_lot():
 
         init_lot_db(lot_info, name, frame_path, video_path, description, address)
         lot_id = get_latest_lot_id() - 1
-        response = {"lot_id": lot_id,
-                    "spots": lot_info}
+        response = {
+            "lot_id": lot_id,
+            "spots": lot_info
+        }
         
-        return jsonify({"redirect": url_for("parking.lot_status", lot_id=lot_id)})
+        return jsonify(response)
 
     # If the method is GET, render the form
     return render_template('initialize_lot_form.html')
 
-
 """
-    Route for fetching lot status by ID.
+    Route for fetching lot status by ID and displaying test HTML Page.
 
     Args:
         lot_id (int): ID of the parking lot to get status for
@@ -55,6 +57,95 @@ def initialize_lot():
 """
 @parking_bp.route('/lot_status/<int:lot_id>', methods=['GET'])
 def lot_status(lot_id):
+    # Capture current frame
+    current_frame = get_current_frame_for_lot(lot_id)
+
+    if current_frame is None:
+        # If no frame is available, API returns early
+        return jsonify("No Frame")
+
+    # Run car detection
+    updated_info = detect_cars_background_subtraction(current_frame, lot_id)
+
+    # Updated lot information
+    update_lot_info_db(lot_id, updated_info)
+
+    # Get lot info
+    lot = (
+        ParkingLot.query
+        .filter_by(id=lot_id)
+    )
+
+    # Get analytics
+    analytics = (
+        ParkingAnalytics.query
+        .filter_by(parking_lot_id=lot_id)
+        .order_by(ParkingAnalytics.time_stamp.desc())
+        .first()
+    )
+
+    response = {
+        "lot_id": lot_id,
+        "lot_name": lot.name,
+        "lot_address": lot.address,
+        "lot_description": lot.description,
+        "spots": updated_info,
+        "total_spaces": analytics.total_spaces,
+        "occupied_spaces": analytics.occupied_spaces
+    }
+
+    return jsonify(response)
+
+# HTML ROUTES
+"""
+    Handle parking lot initialization via GET and POST requests.
+
+    Returns:
+        Returns HTML form to fill out relevant information if method is GET, redirects to Lot Status if POST.
+"""
+@parking_bp.route('/tests/initialize_lot', methods=['GET', 'POST'])
+def initialize_lot_html():
+    if request.method == 'POST':
+        # Get the form data as JSON
+        data = request.get_json()
+        video_path = data.get('video_path')
+        name = data.get('name')
+        description = data.get('description')
+        address = data.get('address')
+
+        if not video_path:
+            return jsonify({"error": "video_path not provided"}), 400
+        if not name:
+            return jsonify({"error": "Lot name not provided"}), 400
+        
+        # Process the parking lot initialization
+        lot_info, frame_path = detect_parking_spaces_auto(video_path)
+
+        if not lot_info:
+            return jsonify({"error": "No parking spots detected"}), 500
+
+        init_lot_db(lot_info, name, frame_path, video_path, description, address)
+        lot_id = get_latest_lot_id() - 1
+        response = {"lot_id": lot_id,
+                    "spots": lot_info}
+        
+        return jsonify({"redirect": url_for("parking.lot_status_html", lot_id=lot_id)})
+
+    # If the method is GET, render the form
+    return render_template('initialize_lot_form.html')
+
+
+"""
+    Route for fetching lot status by ID and displaying test HTML Page.
+
+    Args:
+        lot_id (int): ID of the parking lot to get status for
+
+    Returns:
+        JSON data of parking lot info after running through car detection
+"""
+@parking_bp.route('/tests/lot_status/<int:lot_id>', methods=['GET'])
+def lot_status_html(lot_id):
     # Capture current frame
     current_frame = get_current_frame_for_lot(lot_id)
 
