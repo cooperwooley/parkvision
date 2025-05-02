@@ -22,35 +22,22 @@ Initializes a new parking lot using a video file. Detects and saves parking spot
 ```json
 { 
   "lot_id": 1,
+  "spots": [
+    {
+      "id": 1,
+      "x": 100,
+      "y": 150,
+      "width": 50,
+      "height": 80,
+      "status": "empty"
+    },
+  ]
 }
 ```
 
 ### `GET /api/lot_status/<int:lot_id>`
 Will return the current status of each parking space in a given lot.
 
-**Response**
-```json
-{
-  "lot_id": 1,
-  "lot_name": "Lot A",
-  "lot_address": "123 Main St",
-  "lot_description": "Near Engineering Hall",
-  "spots": [
-    {
-      "spot_id": 1,
-      "spot_number": "A1",
-      "occupied": true,
-      "x": 100,
-      "y": 150,
-      "width": 50,
-      "height": 80
-    },
-    ...
-  ],
-  "total_spaces": 20,
-  "occupied_spaces": 7
-}
-```
 
 ### `POST /admin/login`
 Logs in an admin user.

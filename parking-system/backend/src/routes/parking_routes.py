@@ -38,10 +38,10 @@ def initialize_lot():
     init_lot_db(lot_info, name, frame_path, video_path, description, address)
     lot_id = get_latest_lot_id() - 1
 
-    return jsonify({
-        "lot_id": lot_id
-    })
+    response = {"lot_id": lot_id,
+                "spots": lot_info}
 
+    return jsonify(response)
 
 """
     Route for fetching lot status by ID and displaying test HTML Page.
@@ -58,16 +58,13 @@ def lot_status(lot_id):
     if current_frame is None:
         return jsonify("No Frame")
 
-    # Run car detection to get occupancy data
+    # Run car detection
     updated_info = detect_cars_background_subtraction(current_frame, lot_id)
+
+    # Update database
     update_lot_info_db(lot_id, updated_info)
 
-    response = {
-        "lot_id": lot_id,
-        "spots": updated_info,
-    }
-
-    return jsonify(response)
+    return jsonify(updated_info)
 
 
 # HTML ROUTES FOR QUICK TESTING (Might just want to delete once React is working all good)
