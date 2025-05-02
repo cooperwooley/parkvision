@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lot Status</title>
+</head>
+<body>
+    <h1>Parking Lot Status</h1>
+    <h2>Lot ID: {{ lot_id }}</h2>
+
+    <p>Total Spaces: {{ total_spaces }}</p>
+    <p>Occupied Spaces: {{ occupied }}</p>
+
+    <ul>
+        {% for spot in spots %}
+            <li>Spot Number: {{ spot.id }} - Status: {{ spot.status }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('parking.initialize_lot') }}">Go back to initialize lot</a>
+</body>
+</html>

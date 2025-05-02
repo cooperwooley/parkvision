@@ -3,6 +3,7 @@ import time
 from models.parking_lot import ParkingLot
 from models.parking_spot import ParkingSpot
 from models.spot_status import SpotStatus
+from models.parking_analytics import ParkingAnalytics
 from extensions import db
 
 """
@@ -49,8 +50,19 @@ def init_lot_db(lot_info, name, frame_path, video_path, description="", address=
         )
         db.session.add(new_spot)
         print(f"Spot {str(spot['id'])} for Lot {name}")
+    db.session.commit()
+    
+    # Create ParkingAnalytics entry
+    analytics_entry = ParkingAnalytics(
+        parking_lot_id=new_lot.id,
+        total_spaces=len(lot_info),
+        occupied_spaces=0
+    )
+    db.session.add(analytics_entry)
+    print(f"Lot analytics for Lot {name} added")
 
     db.session.commit()
+    print(f"Lot {name}, spots, and analytics commited")
 
 
 """
@@ -79,7 +91,27 @@ def update_lot_info_db(lot_id, updated_info):
             )
             db.session.add(new_status)
 
+    # Update analytics
+    analytics_entry = ParkingAnalytics.query.filter_by(parking_lot_id=lot_id).first()
+
+    if analytics_entry:
+        occupied_count = sum(1 for spot in updated_info if spot['status'] == 'occupied')
+        analytics_entry.occupied_spaces = occupied_count
+        db.session.commit()
+        print(f"Updated analytics for Lot {lot_id}: Occupied spaces = {occupied_count}")
+    else:
+        total_spaces = len(updated_info)
+        analytics_entry = ParkingAnalytics(
+            parking_lot_id=lot_id,
+            total_spaces=total_spaces,
+            occupied_spaces=0
+        )
+        db.session.add(analytics_entry)
+        db.session.commit()
+        print(f"Created new analytics entry for Lot {lot_id} with {total_spaces} total spaces.")
+
     db.session.commit()
+
 
 
 """

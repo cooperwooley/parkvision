@@ -1,7 +1,7 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, url_for
 from utils.camera_processor import detect_parking_spaces_auto, detect_cars_background_subtraction
 from utils.database_manager import init_lot_db, update_lot_info_db, get_current_frame_for_lot, get_latest_lot_id
-from models.parking_lot import ParkingLot
+from models.parking_analytics import ParkingAnalytics
 
 parking_bp = Blueprint('parking', __name__)
 
@@ -38,7 +38,7 @@ def initialize_lot():
         response = {"lot_id": lot_id,
                     "spots": lot_info}
         
-        return jsonify(response)
+        return jsonify({"redirect": url_for("parking.lot_status", lot_id=lot_id)})
 
     # If the method is GET, render the form
     return render_template('initialize_lot_form.html')
@@ -58,13 +58,26 @@ def lot_status(lot_id):
     # Capture current frame
     current_frame = get_current_frame_for_lot(lot_id)
 
+    if current_frame is None:
+        # If no frame is available, render a message
+        return render_template('no_video_playback.html', lot_id=lot_id)
+
     # Run car detection
     updated_info = detect_cars_background_subtraction(current_frame, lot_id)
+    print(len(updated_info))
 
     # Run car detection
     update_lot_info_db(lot_id, updated_info)
 
-    return jsonify(updated_info)
+    # Get analytics
+    analytics = (
+        ParkingAnalytics.query
+        .filter_by(parking_lot_id=lot_id)
+        .order_by(ParkingAnalytics.time_stamp.desc())
+        .first()
+    )
+
+    return render_template('lot_status_display.html', lot_id=lot_id, spots=updated_info, total_spaces=analytics.total_spaces, occupied=analytics.occupied_spaces)
 
 
 # Shows the info for specific lot id

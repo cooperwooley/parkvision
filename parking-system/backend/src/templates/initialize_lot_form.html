@@ -28,12 +28,8 @@
                 // Show success message or handle the response
                 if (data.error) {
                     document.getElementById('error-message').innerText = data.error;
-                } else {
-                    document.getElementById('success-message').innerText = 'Parking lot initialized successfully!';
-                    // Redirect to the initialize_lot page (or any other page you want)
-                    setTimeout(() => {
-                        window.location.href = '/initialize_lot';  // Redirect after 2 seconds
-                    }, 2000);  // Adjust the delay as needed
+                } else if (data.redirect) {
+                    window.location.href = data.redirect;  // Redirect to /lot_status/<id>
                 }
             })
             .catch(error => {
