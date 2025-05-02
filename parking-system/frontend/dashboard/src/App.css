@@ -31,9 +31,6 @@ h1 {
 }
 
 <<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 88a37a5da68f6abeeaf7ed8c3def49ea177ffd67
 /* 🔹 Header row for title + admin buttons */
 .header-row {
   display: flex;
@@ -79,11 +76,8 @@ h1 {
   margin: 1rem 0;
 }
 
-<<<<<<< HEAD
 =======
 >>>>>>> 951e939 (Basic Dashboard)
-=======
->>>>>>> 88a37a5da68f6abeeaf7ed8c3def49ea177ffd67
 .parking-container {
   position: relative;
   width: 100%;
@@ -176,11 +170,7 @@ button {
 button:hover {
   background-color: #1e6bb8;
 <<<<<<< HEAD
-<<<<<<< HEAD
 }
 =======
 }
 >>>>>>> 951e939 (Basic Dashboard)
-=======
-}
->>>>>>> 88a37a5da68f6abeeaf7ed8c3def49ea177ffd67
