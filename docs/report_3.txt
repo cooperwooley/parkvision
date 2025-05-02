@@ -1,0 +1,26 @@
+
+
+Backend Report - ParkVision
+
+What went well:
+    - Completed the core Flask application and developed several REST API endpoints to begin integration with the frontend.
+    - Built a working Docker setup that spins up the Flask app and PostgreSQL server with all dependencies installed.
+    - Wrote multiple unit tests to validate endpoint functionality, parking spot detection, occupancy (car) detection algorithms, and database population.
+    - Began extensive documentation:
+        - Endpoint descriptions for frontend integration.
+        - Docker usage instructions.
+        - Overview of the computer vision approach.
+    - Cleaned up the backend codebase by removing obsolete and primitive test code to improve maintainability.
+
+What didn't go well:
+    - Some features are still under development, including:
+        - Metrics/analytics functionality and endpoints for parking trends.
+        - Admin authentication and login functionality.
+    - Integration with frotend is still partial.
+
+Ideas/Actions:
+    - Finish implementing:
+        - Parking metric endpoints.
+        - Admin login/authentication and respective routes.
+    - Continue refining backend documentation.
+    - Support frontend to begin integration with our systems.
