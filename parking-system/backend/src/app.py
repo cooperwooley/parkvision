@@ -1,10 +1,15 @@
 from flask import Flask
+from flask_cors import CORS
 from extensions import db
 from models import *
 from routes.parking_routes import parking_bp
 
 def create_app():
     app = Flask(__name__)
+
+    # ✅ Enable CORS for React frontend (Vite runs at port 5173 by default)
+    CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -20,4 +25,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
