@@ -29,13 +29,31 @@ Ideas/Actions:
 Frontend Report
 
 What went well:
-    - Completed the Admin and login page visuals.
-    - Updated main dashboard to better work with new features and APIs. 
+    - Completed the Admin and login page visuals, providing a cleaner and more intuitive UI.
+    - Updated the main dashboard to better accommodate new features and backend APIs.
+    - Successfully integrated TypeScript across the frontend for better type safety and maintainability.
+    - Created reusable components for forms and layout to speed up development.
 
 What didn't go well:
-    - Need to fully integrate routes from the backend.
-    - Add more features that achieve the MVP.
+    - Still need to fully integrate key routes from the backend (e.g., /initialize_lot, /lot_status/<id>, /admin/login).
+    - Encountered issues with cross-origin requests and session handling between the frontend and Flask backend.
+    - Some planned features for the MVP, such as real-time lot status updates and camera feed integration, are not yet functional.
 
 Ideas/Actions:
-    - Begin working on implementing REST APIs into frontend.
-    - Improve documentation and allow the use of video feeds.
+    - Begin wiring up REST API calls in a centralized api.tsx service using Axios.
+    - Store admin session status securely on the frontend and use it to guard admin-only pages.
+    - Improve documentation for setting up the frontend and coordinating with the backend team on endpoint usage.
+    - Add support for video input selection and previews on the lot initialization page.
+    - Start integrating feedback and error handling for failed API responses (e.g., invalid login, missing data).
+
+
+Database Report
+
+What went well:
+    -
+
+What didn't go well:
+    -
+
+Ideas/Actions:
+    -
