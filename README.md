@@ -57,6 +57,11 @@ Key utilities used in parking detection:
 
 - `remove_black_bars(frame)`: Cleans video feed frames by removing black borders for better edge detection
 
+Key utilities for data processing:
+- `normalize(spots)`: Takes all spots in a lot and normalizes them to have the same bounding area, and x and y coordinates that are more ideal
+
+![backend detection](docs/backend-detection.jpg)
+
 ### API Routes
 
 - `GET /initialize_lot`: Load HTML form or interface for initializing lots
