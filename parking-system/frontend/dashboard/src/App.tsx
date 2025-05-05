@@ -231,7 +231,7 @@ function App() {
   return (
     <div className="parking-app admin-view">
       <header>
-        <h1>Parking Management System</h1>
+        <h1>ParkVision Management System</h1>
         <div className="header-buttons">
           <button onClick={goToPublic} className="view-public-button">View Public Dashboard</button>
           <button onClick={handleLogout} className="logout-button">Logout</button>

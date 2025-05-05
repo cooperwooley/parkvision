@@ -2,9 +2,9 @@ from flask import Blueprint, request, jsonify, render_template
 from utils.camera_processor import detect_parking_spaces_auto, detect_cars_background_subtraction
 from utils.database_manager import init_lot_db, update_lot_info_db, get_current_frame_for_lot, get_latest_lot_id
 from models.parking_lot import ParkingLot
+from flask_cors import cross_origin
 
 parking_bp = Blueprint('parking', __name__)
-
 
 """
     Handle parking lot initialization via GET and POST requests.
@@ -54,6 +54,7 @@ def initialize_lot():
         JSON data of parking lot info after running through car detection
 """
 @parking_bp.route('/lot_status/<int:lot_id>', methods=['GET'])
+@cross_origin(origins='http://localhost:5173', supports_credentials=True)
 def lot_status(lot_id):
     # Capture current frame
     current_frame = get_current_frame_for_lot(lot_id)

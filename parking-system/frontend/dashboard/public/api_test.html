@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            box-sizing: border-box;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flask API Test</h1>
+    
+    <div class="test-section">
+        <h2>Admin Login</h2>
+        <form id="loginForm">
+            <label for="username">Username/Email:</label>
+            <input type="text" id="username" value="admin">
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" value="admin123">
+            
+            <button type="button" onclick="testLogin()">Test Login</button>
+        </form>
+        <pre id="loginResult">Results will appear here</pre>
+    </div>
+    
+    <div class="test-section">
+        <h2>Initialize Lot</h2>
+        <form id="initLotForm">
+            <label for="lotName">Name:</label>
+            <input type="text" id="lotName" value="Test Parking Lot">
+            
+            <label for="lotDesc">Description:</label>
+            <input type="text" id="lotDesc" value="A test parking lot">
+            
+            <label for="lotAddress">Address:</label>
+            <input type="text" id="lotAddress" value="123 Test St">
+            
+            <label for="videoPath">Video Path:</label>
+            <input type="text" id="videoPath" value="/path/to/test_video.mp4">
+            
+            <button type="button" onclick="testInitLot()">Test Initialize</button>
+        </form>
+        <pre id="initLotResult">Results will appear here</pre>
+    </div>
+    
+    <div class="test-section">
+        <h2>Get Lot Status</h2>
+        <form id="lotStatusForm">
+            <label for="lotId">Lot ID:</label>
+            <input type="number" id="lotId" value="1">
+            
+            <button type="button" onclick="testLotStatus()">Test Status</button>
+        </form>
+        <pre id="lotStatusResult">Results will appear here</pre>
+    </div>
+
+    <script>
+        // Base URL for the backend API
+        const API_BASE_URL = 'http://localhost:5000';
+        
+        // Test the login endpoint
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const resultElement = document.getElementById('loginResult');
+            
+            try {
+                resultElement.textContent = 'Sending request...';
+                
+                const response = await fetch(`${API_BASE_URL}/admin/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        username_or_email: username,
+                        password: password
+                    }),
+                });
+                
+                const data = await response.json();
+                resultElement.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultElement.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Test the initialize lot endpoint
+        async function testInitLot() {
+            const name = document.getElementById('lotName').value;
+            const description = document.getElementById('lotDesc').value;
+            const address = document.getElementById('lotAddress').value;
+            const video_path = document.getElementById('videoPath').value;
+            const resultElement = document.getElementById('initLotResult');
+            
+            try {
+                resultElement.textContent = 'Sending request...';
+                
+                const response = await fetch(`${API_BASE_URL}/initialize_lot`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        name,
+                        description,
+                        address,
+                        video_path
+                    }),
+                });
+                
+                const data = await response.json();
+                resultElement.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultElement.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Test the lot status endpoint
+        async function testLotStatus() {
+            const lotId = document.getElementById('lotId').value;
+            const resultElement = document.getElementById('lotStatusResult');
+            
+            try {
+                resultElement.textContent = 'Sending request...';
+                
+                const response = await fetch(`${API_BASE_URL}/lot_status/${lotId}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                
+                const data = await response.json();
+                resultElement.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultElement.textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
