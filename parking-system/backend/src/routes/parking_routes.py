@@ -59,7 +59,7 @@ def initialize_lot():
 def lot_status(lot_id):
     current_frame = get_current_frame_for_lot(lot_id)
     if current_frame is None:
-        return jsonify("No Frame")
+        return jsonify({"error": "no current frame"}), 400
 
     # Run car detection
     updated_info = detect_cars_background_subtraction(current_frame, lot_id)
