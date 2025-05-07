@@ -189,7 +189,7 @@ def detect_cars_background_subtraction(frame, lot_id):
             # Calculate percentage of white pixels
             white_pixel_percentage = np.sum(spot_roi == 255) / (w * h) * 100
 
-            if white_pixel_percentage > 50:
+            if white_pixel_percentage > 20:
                 spot_status = 'occupied'
                 color = (0, 0, 255)
             else:

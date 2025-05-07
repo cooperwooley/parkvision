@@ -29,6 +29,9 @@ function App() {
   const [lotStatus, setLotStatus] = useState<any>(null);
   const [statusError, setStatusError] = useState<string>('');
 
+  // Video Autoplay
+  const [shouldPlayVideo, setShouldPlayVideo] = useState(false);
+
   // Check login status when component mounts
   useEffect(() => {
     if (isLoggedIn) {
@@ -63,6 +66,8 @@ function App() {
         address: lotAddress,
         video_path: videoPath
       });
+
+      setShouldPlayVideo(true);
       
       // Check the structure of the response from your actual API
       if (result.lot_id) {
@@ -108,8 +113,8 @@ function App() {
 
     fetchStatus();
     
-    // Set up periodic refresh every 5 seconds
-    const intervalId = setInterval(fetchStatus, 5000);
+    // Set up periodic refresh every 3 seconds
+    const intervalId = setInterval(fetchStatus, 3000);
     
     return () => clearInterval(intervalId);
   }, [lotId]);
@@ -271,7 +276,7 @@ function App() {
             {initError && <div className="error">{initError}</div>}
             <button type="submit">Initialize Lot</button>
           </form>
-          <LotVideo />
+          {shouldPlayVideo && <LotVideo />}
         </section>
 
         <section className="lot-status">

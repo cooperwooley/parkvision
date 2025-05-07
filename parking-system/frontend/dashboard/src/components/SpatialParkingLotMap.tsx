@@ -1,3 +1,4 @@
+
 interface ParkingSpace {
   id: number;
   x: number;
@@ -12,7 +13,6 @@ export default function SpatialParkingLotMap({ lotStatus }: { lotStatus: Parking
 
   const SCALE = 0.8;
   const VERTICAL_GAP_ADJUSTMENT = 0.91;
-  const OPACITY = 0.7;
 
   const maxX = Math.max(...lotStatus.map(spot => spot.x + spot.width)) + 20;
   const maxY = Math.max(...lotStatus.map(spot => spot.y + spot.height)) + 20;
@@ -44,7 +44,7 @@ export default function SpatialParkingLotMap({ lotStatus }: { lotStatus: Parking
             className={`space ${spot.status === 'occupied' ? 'occupied' : 'available'}`}
             style={{
               position: 'absolute',
-              left: `${spot.x + 25 - leftShiftAmount}px`, // Apply left shift if id >= 19
+              left: `${spot.x - 20 - leftShiftAmount}px`, // Apply left shift if id >= 19
               top: `${adjustedTop + 5 - topShiftAmount}px`,  // Apply top shift if id >= 19
               width: `${spot.width * SCALE}px`,
               height: `${spot.height * SCALE}px`,
@@ -60,16 +60,14 @@ export default function SpatialParkingLotMap({ lotStatus }: { lotStatus: Parking
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
               transition: 'background-color 0.3s ease',
               zIndex: 1,
-              opacity: OPACITY
             }}
-          >
-            {spot.id}
+          > 
             <span style={{ fontSize: '12px' }}>
               {spot.status === 'occupied' ? 'Occupied' : 'Available'}
             </span>
           </div>
         );
-      })}
+      })} 
     </div>
   );
 }
