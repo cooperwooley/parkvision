@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { loginAdmin, initializeLot, getLotStatus, logout } from './services/api';
+import LotVideo from "./components/LotVideo";
+import SpatialParkingLotMap from './components/SpatialParkingLotMap';
 import './App.css';
 
 
@@ -106,28 +108,19 @@ function App() {
 
     fetchStatus();
     
-    // Set up periodic refresh every 30 seconds
-    const intervalId = setInterval(fetchStatus, 30000);
+    // Set up periodic refresh every 5 seconds
+    const intervalId = setInterval(fetchStatus, 5000);
     
     return () => clearInterval(intervalId);
   }, [lotId]);
 
   // Updated to handle the actual structure of lot status data from your API
   const renderParkingSpaces = () => {
-    if (!lotStatus || !lotStatus.spots) return null;
+    if (!lotStatus || !Array.isArray(lotStatus)) return null;
     
     return (
       <div className="spaces-grid">
-        {lotStatus.spots.map((spot: any, index: number) => (
-          <div 
-            key={index}
-            className={`space ${spot.is_occupied ? 'occupied' : 'available'}`}
-          >
-            Space #{index + 1}
-            <br />
-            {spot.is_occupied ? 'Occupied' : 'Available'}
-          </div>
-        ))}
+        <SpatialParkingLotMap lotStatus={lotStatus} />
       </div>
     );
   };
@@ -312,6 +305,8 @@ function App() {
             {renderParkingSpaces()}
           </div>
         )}
+        
+        <LotVideo />
       </section>
     </div>
   );

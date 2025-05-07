@@ -4,6 +4,8 @@ from extensions import db
 from models import *
 from routes.parking_routes import parking_bp
 from routes.auth import auth_bp
+from flask import send_file
+import os
 
 def create_app():
     app = Flask(__name__)
@@ -16,6 +18,11 @@ def create_app():
     @app.route('/')
     def index():
         return 'Flask server is up and running!'
+    
+    @app.route("/video")
+    def get_video():
+        video_path = os.path.join(os.path.dirname(__file__), "..", "tests", "lot_footage.mp4")
+        return send_file(video_path, mimetype="video/mp4")
 
     with app.app_context():
         # This takes in the json file generated from the camera_test.py file.

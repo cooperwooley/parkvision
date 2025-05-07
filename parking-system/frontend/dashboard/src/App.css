@@ -158,29 +158,45 @@ input[type="number"] {
   color: #555;
 }
 
-/* Parking Space Map */
-.spaces-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 0.75rem;
-  margin-top: 1rem;
+.parking-lot-map {
+  position: relative;
+  border: 2px solid #333;
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: auto;
 }
 
-.space {
-  padding: 1rem;
+.parking-lot-map .space {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  border-radius: 6px;
-  font-weight: bold;
-  border: 2px solid #ccc;
-  background-color: #fff;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-.space.available {
-  background-color: #d9fdd3;
-  border-color: #2ecc71;
+.parking-lot-map .space.available {
+  background-color: #4cd137;
+  border: 2px solid #2ecc71;
 }
 
-.space.occupied {
-  background-color: #fbdcdc;
-  border-color: #e74c3c;
+.parking-lot-map .space.occupied {
+  background-color: #ff6b6b;
+  border: 2px solid #e74c3c;
+  color: white;
 }
+
+.spatial-parking-display {
+  margin: 20px 0;
+  width: 100%;
+}
+
+/* You can add media queries for responsive behavior */
+@media (max-width: 768px) {
+  .parking-lot-map {
+    height: 400px !important;
+  }
+}
+
