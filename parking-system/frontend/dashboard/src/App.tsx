@@ -138,20 +138,20 @@ function App() {
           <h2>Current Parking Status</h2>
           <div className="lot-selector">
             <label>Select Parking Lot:</label>
-            <input 
-              type="number" 
-              value={lotId} 
+            <input
+              type="number"
+              value={lotId}
               onChange={(e) => setLotId(Number(e.target.value))}
-              min="1" 
+              min="1"
             />
           </div>
-          
+
           {statusError && <div className="error">{statusError}</div>}
-          
+
           {lotStatus && (
             <div className="status-display">
               <h3>{lotStatus.name || `Parking Lot #${lotId}`}</h3>
-              
+
               {lotStatus.total_spaces !== undefined && (
                 <div className="status-summary">
                   <div className="status-box">
@@ -168,17 +168,17 @@ function App() {
                   </div>
                 </div>
               )}
-              
+
               {lotStatus.last_updated && (
                 <p className="update-time">Last Updated: {new Date(lotStatus.last_updated).toLocaleString()}</p>
               )}
-              
+
               <h3>Parking Space Map</h3>
               {renderParkingSpaces()}
             </div>
           )}
         </section>
-        
+
         <footer>
           <p>© 2025 ParkVision Management System</p>
         </footer>
@@ -186,7 +186,6 @@ function App() {
     );
   }
 
-  // Login view
   if (view === 'login') {
     return (
       <div className="login-page">
@@ -196,20 +195,20 @@ function App() {
           <form onSubmit={handleLogin}>
             <div>
               <label>Username/Email:</label>
-              <input 
-                type="text" 
-                value={username} 
+              <input
+                type="text"
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                required 
+                required
               />
             </div>
             <div>
               <label>Password:</label>
-              <input 
-                type="password" 
-                value={password} 
+              <input
+                type="password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required 
+                required
               />
             </div>
             {loginError && <div className="error">{loginError}</div>}
@@ -220,7 +219,6 @@ function App() {
     );
   }
 
-  // Admin view (when logged in)
   return (
     <div className="parking-app admin-view">
       <header>
@@ -231,83 +229,84 @@ function App() {
         </div>
       </header>
 
-      <section className="init-lot">
-        <h2>Initialize New Parking Lot</h2>
-        <form onSubmit={handleInitializeLot}>
-          <div>
-            <label>Name:</label>
-            <input 
-              type="text" 
-              value={lotName} 
-              onChange={(e) => setLotName(e.target.value)}
-              required 
-            />
-          </div>
-          <div>
-            <label>Description:</label>
-            <input 
-              type="text" 
-              value={lotDescription} 
-              onChange={(e) => setLotDescription(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Address:</label>
-            <input 
-              type="text" 
-              value={lotAddress} 
-              onChange={(e) => setLotAddress(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Video Path:</label>
-            <input 
-              type="text" 
-              value={videoPath} 
-              onChange={(e) => setVideoPath(e.target.value)}
-              required 
-              placeholder="Path to video file for parking spot detection"
-            />
-          </div>
-          {initError && <div className="error">{initError}</div>}
-          <button type="submit">Initialize Lot</button>
-        </form>
-      </section>
+      <div className="lot-dashboard-container">
+        <section className="init-lot">
+          <h2>Initialize New Parking Lot</h2>
+          <form onSubmit={handleInitializeLot}>
+            <div>
+              <label>Name:</label>
+              <input
+                type="text"
+                value={lotName}
+                onChange={(e) => setLotName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Description:</label>
+              <input
+                type="text"
+                value={lotDescription}
+                onChange={(e) => setLotDescription(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Address:</label>
+              <input
+                type="text"
+                value={lotAddress}
+                onChange={(e) => setLotAddress(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Video Path:</label>
+              <input
+                type="text"
+                value={videoPath}
+                onChange={(e) => setVideoPath(e.target.value)}
+                required
+                placeholder="Path to video file for parking spot detection"
+              />
+            </div>
+            {initError && <div className="error">{initError}</div>}
+            <button type="submit">Initialize Lot</button>
+          </form>
+          <LotVideo />
+        </section>
 
-      <section className="lot-status">
-        <h2>Lot Status</h2>
-        <div>
-          <label>Lot ID:</label>
-          <input 
-            type="number" 
-            value={lotId} 
-            onChange={(e) => setLotId(Number(e.target.value))}
-            min="1" 
-          />
-        </div>
-        {statusError && <div className="error">{statusError}</div>}
-        {lotStatus && (
-          <div className="status-display">
-            <h3>{lotStatus.name || `Parking Lot #${lotId}`}</h3>
-            
-            {lotStatus.total_spaces !== undefined && (
-              <>
-                <p>Total Spaces: {lotStatus.total_spaces}</p>
-                <p>Available Spaces: {lotStatus.available_spaces || 'N/A'}</p>
-                <p>Occupied Spaces: {lotStatus.occupied_spaces || 'N/A'}</p>
-              </>
-            )}
-            
-            {lotStatus.last_updated && (
-              <p>Last Updated: {new Date(lotStatus.last_updated).toLocaleString()}</p>
-            )}
-            
-            {renderParkingSpaces()}
+        <section className="lot-status">
+          <h2>Lot Status</h2>
+          <div>
+            <label>Lot ID:</label>
+            <input
+              type="number"
+              value={lotId}
+              onChange={(e) => setLotId(Number(e.target.value))}
+              min="1"
+            />
           </div>
-        )}
-        
-        <LotVideo />
-      </section>
+          {statusError && <div className="error">{statusError}</div>}
+          {lotStatus && (
+            <div className="status-display">
+              <h3>{lotStatus.name || `Parking Lot #${lotId}`}</h3>
+
+              {lotStatus.total_spaces !== undefined && (
+                <>
+                  <p>Total Spaces: {lotStatus.total_spaces}</p>
+                  <p>Available Spaces: {lotStatus.available_spaces || 'N/A'}</p>
+                  <p>Occupied Spaces: {lotStatus.occupied_spaces || 'N/A'}</p>
+                </>
+              )}
+
+              {lotStatus.last_updated && (
+                <p>Last Updated: {new Date(lotStatus.last_updated).toLocaleString()}</p>
+              )}
+
+              {renderParkingSpaces()}
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

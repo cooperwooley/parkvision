@@ -27,23 +27,6 @@ export default function SpatialParkingLotMap({ lotStatus }: { lotStatus: Parking
         margin: '0 auto',
       }}
     >
-      {/* Video Background */}
-      <video
-        src="/lot_footage.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: 0
-        }}
-      />
       
       {/* Parking Spots */}
       {lotStatus.map((spot) => {
