@@ -14,6 +14,9 @@ ParkVision leverages computer vision and backend infrastructure to deliver a rea
 - Enable administrators to monitor lot occupancy
 - Provide insights for universities, businesses, or municipalities
 
+[![demo](docs/thumbnail.png)](https://youtu.be/zx7e-RMXpoQ)
+*Click the thumbnail to be redirected to a demo*
+
 ## Current Features
 
 ### Backend (Python, Flask, OpenCV)
