@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from utils.camera_processor import detect_parking_spaces_auto, detect_cars_background_subtraction
 from utils.database_manager import init_lot_db, update_lot_info_db, get_current_frame_for_lot, get_latest_lot_id
 from utils.data_processor import normalize
-from flask_cors import cross_origin
+from models.parking_lot import ParkingLot
 
 parking_bp = Blueprint('parking', __name__)
 
@@ -18,31 +18,36 @@ parking_bp = Blueprint('parking', __name__)
 """
 @parking_bp.route('/initialize_lot', methods=['POST'])
 def initialize_lot():
-    data = request.get_json()
-    video_path = data.get('video_path')
-    name = data.get('name')
-    description = data.get('description')
-    address = data.get('address')
+    if request.method == 'POST':
+        # Get the form data as JSON
+        data = request.get_json()
+        video_path = data.get('video_path')
+        name = data.get('name')
+        description = data.get('description')
+        address = data.get('address')
 
-    if not video_path:
-        return jsonify({"error": "video_path not provided"}), 400
-    if not name:
-        return jsonify({"error": "Lot name not provided"}), 400
+        if not video_path:
+            return jsonify({"error": "video_path not provided"}), 400
+        if not name:
+            return jsonify({"error": "Lot name not provided"}), 400
+        
+        # Process the parking lot initialization
+        lot_info, frame_path = detect_parking_spaces_auto(video_path)
 
-    lot_info, frame_path = detect_parking_spaces_auto(video_path)
+        if not lot_info:
+            return jsonify({"error": "No parking spots detected"}), 500
+        
+        lot_info = normalize(lot_info)
 
-    if not lot_info:
-        return jsonify({"error": "No parking spots detected"}), 500
-    
-    lot_info = normalize(lot_info)
+        init_lot_db(lot_info, name, frame_path, video_path, description, address)
+        lot_id = get_latest_lot_id() - 1
+        response = {"lot_id": lot_id,
+                    "spots": lot_info}
+        
+        return jsonify(response)
 
-    init_lot_db(lot_info, name, frame_path, video_path, description, address)
-    lot_id = get_latest_lot_id() - 1
-
-    response = {"lot_id": lot_id,
-                "spots": lot_info}
-
-    return jsonify(response)
+    # If the method is GET, render the form
+    return render_template('initialize_lot_form.html')
 
 
 """
