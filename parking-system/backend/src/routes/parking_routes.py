@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify
 from utils.camera_processor import detect_parking_spaces_auto, detect_cars_background_subtraction
 from utils.database_manager import init_lot_db, update_lot_info_db, get_current_frame_for_lot, get_latest_lot_id
 from utils.data_processor import normalize
@@ -6,14 +6,17 @@ from models.parking_lot import ParkingLot
 
 parking_bp = Blueprint('parking', __name__)
 
-
 """
-    Handle parking lot initialization via GET and POST requests.
+    Handle parking lot initialization via POST request.
+
+    Expects:
+        JSON body with 'video_path' and 'name' (required),
+        'description' and 'address' (optional).
 
     Returns:
-        JSON or HTML: If POST, returns JSON data of detected parking spots. If GET, renders an HTML form.
+        JSON: Contains 'lot_id' and list of detected parking spots.
 """
-@parking_bp.route('/initialize_lot', methods=['GET', 'POST'])
+@parking_bp.route('/initialize_lot', methods=['POST'])
 def initialize_lot():
     if request.method == 'POST':
         # Get the form data as JSON
@@ -57,14 +60,16 @@ def initialize_lot():
         JSON data of parking lot info after running through car detection
 """
 @parking_bp.route('/lot_status/<int:lot_id>', methods=['GET'])
+@cross_origin(origins='http://localhost:5173', supports_credentials=True)
 def lot_status(lot_id):
-    # Capture current frame
     current_frame = get_current_frame_for_lot(lot_id)
+    if current_frame is None:
+        return jsonify({"error": "no current frame"}), 400
 
     # Run car detection
     updated_info = detect_cars_background_subtraction(current_frame, lot_id)
 
-    # Run car detection
+    # Update database
     update_lot_info_db(lot_id, updated_info)
 
     return jsonify(updated_info)

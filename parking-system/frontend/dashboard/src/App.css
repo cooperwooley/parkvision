@@ -1,0 +1,218 @@
+/* General Reset and Defaults */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #404040;
+  color: #333;
+}
+
+h1, h2, h3, h4 {
+  margin: 0.5em 0;
+}
+
+input, button {
+  font-size: 1rem;
+}
+
+/* Header */
+header {
+  background-color: #003366;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.5rem;
+}
+
+.header-buttons button {
+  margin-left: 1rem;
+}
+
+/* Buttons */
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #0077cc;
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+.admin-button,
+.login-button,
+.logout-button,
+.view-public-button,
+.back-button {
+  margin: 0.5rem 0;
+}
+
+/* Forms */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="number"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Errors */
+.error {
+  color: red;
+  font-size: 0.9rem;
+}
+
+/* Public Dashboard */
+.parking-app {
+  max-width: 1600px;
+  margin: auto;
+  padding: 1rem;
+}
+
+.public-lot-status {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-top: 1.5rem;
+}
+
+.lot-selector {
+  margin-bottom: 1rem;
+}
+
+/* Lot Status */
+.status-display {
+  margin-top: 1rem;
+  background-color: #f3f9ff;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #cce0f5;
+}
+
+.status-summary {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.status-box {
+  flex: 1;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.available-box {
+  background-color: #e0f7ea;
+}
+
+.occupied-box {
+  background-color: #fdecea;
+}
+
+.status-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.update-time {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Grid Map */
+.spaces-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Admin View Layout */
+.lot-dashboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2rem;
+  align-items: flex-start;
+}
+
+.init-lot,
+.lot-status {
+  flex: 1;
+  min-width: 320px;
+  max-width: 1000px; /* increase from a smaller default if present */
+  width: 100%;        /* or set a fixed width like 800px if needed */
+  margin: 0 auto;     /* center it if fixed width */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 1.25rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Login Page */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background-color: #f0f4f8;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lot-dashboard-container {
+    flex-direction: column;
+  }
+
+  .status-summary {
+    flex-direction: column;
+  }
+
+  .header-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
