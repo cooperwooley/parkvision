@@ -1,3 +1,7 @@
 .pytest_cache
 parking-system/.pytest_cache
 parking-system/tests/__pycache__
+parking-system/backend/src/__pycache__
+parking-system/backend/src/models/__pycache__
+parking-system/backend/src/routes/__pycache__
+parking-system/backend/src/utils/__pycache__
